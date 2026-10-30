@@ -19,6 +19,7 @@ dependencies = [
 
 [tool.ruff]
 line-length = 100
+extend-exclude = ["app/demo/sample-project-baseline"]
 
 [tool.ruff.lint]
 ignore = [

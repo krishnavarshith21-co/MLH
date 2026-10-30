@@ -1,0 +1,10 @@
+[project]
+name = "retail-analytics-service"
+version = "0.2.0"
+description = "Synthetic retail transaction processing service for VERYNTH demonstration"
+requires-python = ">=3.9"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+

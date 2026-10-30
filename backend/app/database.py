@@ -38,7 +38,29 @@ async def get_db() -> AsyncSession:
 
 
 async def init_db() -> None:
-    """Create all tables."""
+    """Create all tables and ensure schema is up to date."""
+    from sqlalchemy import text
     async with engine.begin() as conn:
         from app.models import Dependency, Migration, Project, User, Verification  # noqa: F401
         await conn.run_sync(Base.metadata.create_all)
+        # Ensure new columns exist on SQLite without error
+        try:
+            await conn.execute(text("ALTER TABLE users ADD COLUMN role VARCHAR(100) DEFAULT 'Developer'"))
+        except Exception:
+            pass
+        try:
+            await conn.execute(text("ALTER TABLE users ADD COLUMN account_type VARCHAR(100) DEFAULT 'Standard'"))
+        except Exception:
+            pass
+        try:
+            await conn.execute(text("ALTER TABLE users ADD COLUMN is_demo BOOLEAN DEFAULT 0"))
+        except Exception:
+            pass
+        try:
+            await conn.execute(text("ALTER TABLE projects ADD COLUMN is_demo BOOLEAN DEFAULT 0"))
+        except Exception:
+            pass
+        try:
+            await conn.execute(text("ALTER TABLE projects ADD COLUMN description TEXT DEFAULT NULL"))
+        except Exception:
+            pass

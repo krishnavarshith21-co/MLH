@@ -1,0 +1,2 @@
+"""Demo module for VERYNTH."""
+

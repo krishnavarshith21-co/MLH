@@ -17,7 +17,8 @@ class ParsedDependency:
 
 # Known breaking-change major version bumps (for the demo)
 KNOWN_BREAKING_CHANGES: dict[str, tuple[int, int]] = {
-    "pandas": (1, 2),   # 1.x → 2.x has breaking changes
+    "pandas": (1, 2),    # 1.x → 2.x has breaking changes (DataFrame.append removed)
+    "pydantic": (1, 2),  # 1.x → 2.x has breaking changes (.dict() deprecated, @validator replaced)
 }
 
 

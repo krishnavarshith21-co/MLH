@@ -4,6 +4,9 @@ export interface User {
   id: string;
   email: string;
   name: string;
+  role?: string;
+  account_type?: string;
+  is_demo?: boolean;
   avatar?: string;
   created_at: string;
 }
@@ -13,10 +16,14 @@ export interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isPresentationMode: boolean;
+  togglePresentationMode: () => void;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
+  loginDemo: () => Promise<void>;
   logout: () => void;
   setToken: (token: string) => void;
+  fetchUser: () => Promise<void>;
 }
 
 export interface Project {

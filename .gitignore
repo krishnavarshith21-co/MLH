@@ -58,3 +58,6 @@ dist-ssr/
 .coverage
 htmlcov/
 
+# Demo credentials
+.demo_credentials
+

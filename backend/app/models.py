@@ -3,11 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-try:
-    from datetime import UTC
-except ImportError:
-    UTC = timezone.utc
+from datetime import UTC, datetime
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
@@ -30,6 +26,9 @@ class User(Base):
     name = Column(String(255), nullable=False)
     email = Column(String(255), unique=True, nullable=False, index=True)
     password_hash = Column(String(255), nullable=False)
+    role = Column(String(100), default="Developer")
+    account_type = Column(String(100), default="Standard")
+    is_demo = Column(Boolean, default=False)
     created_at = Column(DateTime, default=_utcnow)
 
     projects = relationship("Project", back_populates="user", cascade="all, delete-orphan")
@@ -46,6 +45,8 @@ class Project(Base):
     dep_file = Column(Text, nullable=True)  # contents of requirements.txt
     file_count = Column(Integer, default=0)
     status = Column(String(50), default="imported")  # imported, analyzing, analyzed, migrating, completed
+    is_demo = Column(Boolean, default=False)
+    description = Column(Text, nullable=True)
     created_at = Column(DateTime, default=_utcnow)
 
     user = relationship("User", back_populates="projects")

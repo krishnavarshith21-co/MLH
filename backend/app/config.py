@@ -33,6 +33,13 @@ class Settings(BaseSettings):
     VERIFICATION_TIMEOUT_SECONDS: int = 60
     MAX_AI_CORRECTION_ATTEMPTS: int = 3
 
+    # Demo Environment
+    ENABLE_DEMO_MODE: bool = True
+    DEMO_USER_EMAIL: str = "demo@verynth.local"
+    DEMO_USER_NAME: str = "VERYNTH Demo"
+    DEMO_USER_ROLE: str = "Demo User"
+    DEMO_ACCOUNT_TYPE: str = "Hackathon Demonstration"
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
     @property

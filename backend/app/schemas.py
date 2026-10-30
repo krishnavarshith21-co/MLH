@@ -21,13 +21,16 @@ class SigninRequest(BaseModel):
 
 class AuthResponse(BaseModel):
     token: str
-    user: "UserResponse"
+    user: UserResponse
 
 
 class UserResponse(BaseModel):
     id: str
     name: str
     email: str
+    role: str = "Developer"
+    account_type: str = "Standard"
+    is_demo: bool = False
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -49,6 +52,8 @@ class ProjectResponse(BaseModel):
     dep_file: str | None = None
     file_count: int
     status: str
+    is_demo: bool = False
+    description: str | None = None
     created_at: datetime
 
     model_config = {"from_attributes": True}

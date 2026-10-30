@@ -12,18 +12,29 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.analysis.router import router as analysis_router
 from app.auth.dependencies import get_current_user
 from app.auth.router import router as auth_router
-from app.database import get_db, init_db
+from app.config import get_settings
+from app.database import async_session, get_db, init_db
+from app.demo.router import router as demo_router
+from app.demo.service import ensure_demo_account
 from app.migrations.router import router as migrations_router
 from app.models import Dependency, Migration, Project, User
 from app.projects.router import router as projects_router
 from app.schemas import HistoryItem
 from app.verification.router import router as verifications_router
 
+settings = get_settings()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Initialize database tables on startup."""
+    """Initialize database tables and seed demo data on startup."""
     await init_db()
+    if settings.ENABLE_DEMO_MODE:
+        try:
+            async with async_session() as session:
+                await ensure_demo_account(session)
+        except Exception as e:
+            print(f"[VERYNTH STARTUP] Demo account seeding notice: {e}")
     yield
 
 
@@ -49,6 +60,7 @@ app.include_router(projects_router)
 app.include_router(analysis_router)
 app.include_router(migrations_router)
 app.include_router(verifications_router)
+app.include_router(demo_router)
 
 
 @app.get("/api/history", response_model=list[HistoryItem], tags=["history"])

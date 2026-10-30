@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Eye, EyeOff, Lock, Mail, AlertCircle, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, AlertCircle, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { OrbitSpheres } from '../components/three/OrbitSpheres';
 import { useAuthStore } from '../store/authStore';
@@ -12,8 +12,9 @@ export function SignInPage() {
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
 
-  const { login } = useAuthStore();
+  const { login, loginDemo } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as any)?.from?.pathname || '/dashboard';
@@ -36,6 +37,19 @@ export function SignInPage() {
       setError(err.message || 'Invalid email or password.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setError(null);
+    setDemoLoading(true);
+    try {
+      await loginDemo();
+      navigate('/dashboard', { replace: true });
+    } catch (err: any) {
+      setError(err.message || 'Failed to initialize demonstration environment.');
+    } finally {
+      setDemoLoading(false);
     }
   };
 
@@ -157,9 +171,24 @@ export function SignInPage() {
                 <div className="w-full border-t border-[#2B3544]" />
               </div>
               <span className="relative px-3 bg-[#151D2A] text-xs text-[#9AA7B5] font-body">
-                or
+                or explore live
               </span>
             </div>
+
+            {/* Hackathon Demo Access Button */}
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={demoLoading || loading}
+              className="w-full flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-xl bg-gradient-to-r from-[#54C7BE]/15 via-[#54C7BE]/10 to-[#54C7BE]/5 border border-[#54C7BE]/40 hover:border-[#54C7BE]/80 text-[#54C7BE] hover:text-[#76DDD5] font-semibold text-sm transition-all shadow-lg shadow-[#54C7BE]/5 group cursor-pointer disabled:opacity-50"
+            >
+              <Sparkles size={16} className="text-[#54C7BE] group-hover:scale-110 transition-transform" />
+              <span>{demoLoading ? 'Initializing Demo Environment...' : 'Try Demo (Judges & Reviewers)'}</span>
+              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform ml-auto" />
+            </button>
+            <p className="text-[11px] text-center text-[#9AA7B5]/80 mt-2 font-mono">
+              Pre-loaded sample projects • Real Qwen2.5-Coder • Isolated pytest
+            </p>
           </div>
 
           <div className="pt-2 text-center text-xs text-[#9AA7B5]">

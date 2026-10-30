@@ -26,6 +26,11 @@ DEPRECATED_PATTERNS = {
         "suggestion": "Replace df.append(other) with pd.concat([df, other], ignore_index=True). "
                       "DataFrame.append() was removed in pandas 2.0.",
     },
+    "dict": {
+        "pattern": "BaseModel.dict()",
+        "suggestion": "Replace model.dict() with model.model_dump(). "
+                      "BaseModel.dict() was deprecated in Pydantic 2.0.",
+    },
 }
 
 
@@ -47,7 +52,7 @@ class _DeprecationVisitor(ast.NodeVisitor):
     visit_AsyncFunctionDef = visit_FunctionDef
 
     def visit_Call(self, node: ast.Call):
-        # Detect pattern: <expr>.append(...)
+        # Detect pattern: <expr>.append(...) or <expr>.dict(...)
         if isinstance(node.func, ast.Attribute):
             method_name = node.func.attr
             if method_name in DEPRECATED_PATTERNS:
@@ -59,9 +64,11 @@ class _DeprecationVisitor(ast.NodeVisitor):
                     else ""
                 )
 
-                # Heuristic: check if this looks like a DataFrame method call
-                # by inspecting the source line for common DataFrame patterns
-                if self._looks_like_dataframe_append(node, code_line):
+                is_match = False
+                if method_name == "append" and self._looks_like_dataframe_append(node, code_line) or method_name == "dict" and self._looks_like_pydantic_dict(node, code_line):
+                    is_match = True
+
+                if is_match:
                     self.issues.append(
                         CompatIssue(
                             file=self.filepath,
@@ -73,6 +80,15 @@ class _DeprecationVisitor(ast.NodeVisitor):
                         )
                     )
         self.generic_visit(node)
+
+    def _looks_like_pydantic_dict(self, node: ast.Call, code_line: str) -> bool:
+        """Check if .dict() call is likely on a Pydantic model."""
+        indicators = ["item", "model", "schema", "user", "payload", "entity", "record", "data"]
+        if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name):
+            var_name = node.func.value.id.lower()
+            if any(ind in var_name for ind in indicators):
+                return True
+        return False
 
     def _looks_like_dataframe_append(self, node: ast.Call, code_line: str) -> bool:
         """Heuristic to determine if .append() is called on a DataFrame-like variable."""
