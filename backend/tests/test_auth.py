@@ -1,6 +1,11 @@
 """Tests for JWT authentication and bcrypt password hashing."""
 
-from app.auth.service import create_access_token, decode_access_token, hash_password, verify_password
+from app.auth.service import (
+    create_access_token,
+    decode_access_token,
+    hash_password,
+    verify_password,
+)
 
 
 def test_password_hashing():

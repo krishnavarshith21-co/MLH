@@ -7,15 +7,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.dependencies import get_current_user
 from app.config import get_settings
 from app.database import get_db
-from app.models import Dependency, Migration, Project, User, Verification
 from app.migrations.service import (
     create_migration,
     get_migration_by_id,
     run_correction,
     run_generation,
 )
+from app.models import Project, User, Verification
 from app.schemas import (
-    HistoryItem,
     MigrationCreateRequest,
     MigrationReportResponse,
     MigrationResponse,
@@ -117,7 +116,6 @@ async def verify_migration_endpoint(
         )
 
     from app.verification.runner import run_verification
-    from app.migrations.service import _parse_combined_source
 
     # Run verification
     verification = await run_verification(db, migration, project)

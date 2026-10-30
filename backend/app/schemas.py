@@ -1,8 +1,8 @@
 """Pydantic schemas for request/response validation."""
 
 from datetime import datetime
-from pydantic import BaseModel, EmailStr, Field
 
+from pydantic import BaseModel, EmailStr, Field
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
 

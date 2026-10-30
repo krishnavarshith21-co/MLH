@@ -1,6 +1,5 @@
 """AI service — Qwen2.5-Coder integration via Ollama HTTP API."""
 
-import json
 import re
 from dataclasses import dataclass
 

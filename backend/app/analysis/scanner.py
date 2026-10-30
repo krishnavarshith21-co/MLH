@@ -24,7 +24,7 @@ def parse_requirements(content: str) -> list[ParsedDependency]:
     deps: list[ParsedDependency] = []
     for raw_line in content.splitlines():
         line = raw_line.strip()
-        if not line or line.startswith("#") or line.startswith("-"):
+        if not line or line.startswith(("#", "-")):
             continue
 
         # Match: package==1.2.3, package>=1.2.3, package~=1.2, package (no version)

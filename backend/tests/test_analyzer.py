@@ -1,8 +1,9 @@
 """Tests for Python AST compatibility analyzer."""
 
-from pathlib import Path
 import tempfile
-from app.analysis.analyzer import analyze_file, analyze_directory
+from pathlib import Path
+
+from app.analysis.analyzer import analyze_directory, analyze_file
 
 
 def test_detect_dataframe_append():

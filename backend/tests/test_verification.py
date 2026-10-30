@@ -22,3 +22,4 @@ def test_parse_pytest_output_errors():
     passed, failed = _parse_pytest_output(output)
     assert passed == 5
     assert failed == 1
+

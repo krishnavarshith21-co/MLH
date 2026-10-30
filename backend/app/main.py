@@ -1,7 +1,8 @@
 """Main FastAPI application entry point for VERYNTH."""
 
 from contextlib import asynccontextmanager
-from fastapi import Depends, FastAPI, HTTPException, status
+
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -90,3 +91,4 @@ async def health_check():
         "service": "VERYNTH Backend",
         "version": "1.0.0",
     }
+

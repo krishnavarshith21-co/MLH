@@ -1,7 +1,7 @@
 """AST-based compatibility analyzer — finds deprecated API usage patterns in Python source."""
 
 import ast
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 
@@ -106,7 +106,7 @@ class _DeprecationVisitor(ast.NodeVisitor):
 def analyze_file(filepath: str | Path) -> list[CompatIssue]:
     """Analyze a single Python file for compatibility issues."""
     filepath = Path(filepath)
-    if not filepath.exists() or not filepath.suffix == ".py":
+    if not filepath.exists() or filepath.suffix != ".py":
         return []
 
     try:

@@ -13,7 +13,7 @@ from app.analysis.scanner import (
 )
 from app.auth.dependencies import get_current_user
 from app.database import get_db
-from app.models import Dependency, Project, User
+from app.models import Dependency, User
 from app.projects.service import get_project_by_id
 from app.schemas import AnalysisIssue, AnalysisResponse, DependencyResponse
 

@@ -1,6 +1,6 @@
 """Authentication service — password hashing and JWT token management."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import bcrypt
 import jwt
@@ -28,8 +28,8 @@ def create_access_token(user_id: str) -> str:
     """Create a JWT access token."""
     payload = {
         "sub": user_id,
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=settings.JWT_EXPIRATION_MINUTES),
-        "iat": datetime.now(timezone.utc),
+        "exp": datetime.now(UTC) + timedelta(minutes=settings.JWT_EXPIRATION_MINUTES),
+        "iat": datetime.now(UTC),
     }
     return jwt.encode(payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
 

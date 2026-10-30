@@ -46,7 +46,7 @@ async def run_verification(
 ) -> Verification:
     """Run pytest verification of migrated code in a temporary directory."""
     # Count existing verifications to determine attempt number
-    from sqlalchemy import select, func
+    from sqlalchemy import func, select
     count_result = await db.execute(
         select(func.count()).where(Verification.migration_id == migration.id)
     )
@@ -111,7 +111,7 @@ async def run_verification(
                 process.communicate(),
                 timeout=settings.VERIFICATION_TIMEOUT_SECONDS,
             )
-        except asyncio.TimeoutError:
+        except TimeoutError:
             process.kill()
             await process.wait()
             verification.status = "error"

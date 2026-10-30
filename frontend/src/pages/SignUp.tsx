@@ -200,3 +200,4 @@ export function SignUpPage() {
     </div>
   );
 }
+

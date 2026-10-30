@@ -136,3 +136,4 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
     </>
   );
 }
+
