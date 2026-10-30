@@ -1,0 +1,296 @@
+[
+  {
+    "width": 1920,
+    "route": "/dashboard",
+    "heading": "Project Overview",
+    "overflow": false
+  },
+  {
+    "width": 1920,
+    "route": "/projects",
+    "heading": "Import Project",
+    "overflow": false
+  },
+  {
+    "width": 1920,
+    "route": "/history",
+    "heading": "Migration History",
+    "overflow": false
+  },
+  {
+    "width": 1920,
+    "route": "/settings",
+    "heading": "Settings",
+    "overflow": false
+  },
+  {
+    "width": 1920,
+    "route": "/projects/f139d126-f829-4fd7-b895-ebaa362c22f5",
+    "heading": "UI QA sample",
+    "overflow": false
+  },
+  {
+    "width": 1920,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21",
+    "heading": "Migration Workspace",
+    "overflow": false
+  },
+  {
+    "width": 1920,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21/verification",
+    "heading": "Test Results",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "route": "/dashboard",
+    "heading": "Project Overview",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "route": "/projects",
+    "heading": "Import Project",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "route": "/history",
+    "heading": "Migration History",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "route": "/settings",
+    "heading": "Settings",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "route": "/projects/f139d126-f829-4fd7-b895-ebaa362c22f5",
+    "heading": "UI QA sample",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21",
+    "heading": "Migration Workspace",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21/verification",
+    "heading": "Test Results",
+    "overflow": false
+  },
+  {
+    "width": 1280,
+    "route": "/dashboard",
+    "heading": "Project Overview",
+    "overflow": false
+  },
+  {
+    "width": 1280,
+    "route": "/projects",
+    "heading": "Import Project",
+    "overflow": false
+  },
+  {
+    "width": 1280,
+    "route": "/history",
+    "heading": "Migration History",
+    "overflow": false
+  },
+  {
+    "width": 1280,
+    "route": "/settings",
+    "heading": "Settings",
+    "overflow": false
+  },
+  {
+    "width": 1280,
+    "route": "/projects/f139d126-f829-4fd7-b895-ebaa362c22f5",
+    "heading": "UI QA sample",
+    "overflow": false
+  },
+  {
+    "width": 1280,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21",
+    "heading": "Migration Workspace",
+    "overflow": false
+  },
+  {
+    "width": 1280,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21/verification",
+    "heading": "Test Results",
+    "overflow": false
+  },
+  {
+    "width": 1024,
+    "route": "/dashboard",
+    "heading": "Project Overview",
+    "overflow": false
+  },
+  {
+    "width": 1024,
+    "route": "/projects",
+    "heading": "Import Project",
+    "overflow": false
+  },
+  {
+    "width": 1024,
+    "route": "/history",
+    "heading": "Migration History",
+    "overflow": false
+  },
+  {
+    "width": 1024,
+    "route": "/settings",
+    "heading": "Settings",
+    "overflow": false
+  },
+  {
+    "width": 1024,
+    "route": "/projects/f139d126-f829-4fd7-b895-ebaa362c22f5",
+    "heading": "UI QA sample",
+    "overflow": false
+  },
+  {
+    "width": 1024,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21",
+    "heading": "Migration Workspace",
+    "overflow": false
+  },
+  {
+    "width": 1024,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21/verification",
+    "heading": "Test Results",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "route": "/dashboard",
+    "heading": "Project Overview",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "route": "/projects",
+    "heading": "Import Project",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "route": "/history",
+    "heading": "Migration History",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "route": "/settings",
+    "heading": "Settings",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "route": "/projects/f139d126-f829-4fd7-b895-ebaa362c22f5",
+    "heading": "UI QA sample",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21",
+    "heading": "Migration Workspace",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21/verification",
+    "heading": "Test Results",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "route": "/dashboard",
+    "heading": "Project Overview",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "route": "/projects",
+    "heading": "Import Project",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "route": "/history",
+    "heading": "Migration History",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "route": "/settings",
+    "heading": "Settings",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "route": "/projects/f139d126-f829-4fd7-b895-ebaa362c22f5",
+    "heading": "UI QA sample",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21",
+    "heading": "Migration Workspace",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21/verification",
+    "heading": "Test Results",
+    "overflow": false
+  },
+  {
+    "width": 360,
+    "route": "/dashboard",
+    "heading": "Project Overview",
+    "overflow": false
+  },
+  {
+    "width": 360,
+    "route": "/projects",
+    "heading": "Import Project",
+    "overflow": false
+  },
+  {
+    "width": 360,
+    "route": "/history",
+    "heading": "Migration History",
+    "overflow": false
+  },
+  {
+    "width": 360,
+    "route": "/settings",
+    "heading": "Settings",
+    "overflow": false
+  },
+  {
+    "width": 360,
+    "route": "/projects/f139d126-f829-4fd7-b895-ebaa362c22f5",
+    "heading": "UI QA sample",
+    "overflow": false
+  },
+  {
+    "width": 360,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21",
+    "heading": "Migration Workspace",
+    "overflow": false
+  },
+  {
+    "width": 360,
+    "route": "/migrations/7ccd8e25-269a-4215-95bd-839f6fafbc21/verification",
+    "heading": "Test Results",
+    "overflow": false
+  }
+]

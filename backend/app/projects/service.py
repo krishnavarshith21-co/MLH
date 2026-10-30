@@ -1,5 +1,7 @@
 """Projects service — import, list, and manage projects."""
 
+from __future__ import annotations
+
 from pathlib import Path
 
 from sqlalchemy import select

@@ -1,86 +1,100 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, FolderInput, ScanEye, Wand2, ShieldCheck, CheckCircle } from 'lucide-react';
+import {
+  FolderInput,
+  ScanEye,
+  Wand2,
+  ShieldCheck,
+  CheckCircle,
+  ArrowRight,
+} from 'lucide-react';
 
 const steps = [
   {
     number: '01',
-    icon: FolderInput,
     title: 'Import',
-    description: 'Provide a local directory or Git repository. Metadata and dependency manifests are indexed securely.',
+    icon: FolderInput,
+    description:
+      'Import your local Python project. We analyze dependencies and structure.',
   },
   {
     number: '02',
-    icon: ScanEye,
     title: 'Analyze',
-    description: 'Python AST engine identifies removed APIs and pinpoint exact files and line numbers affected.',
+    icon: ScanEye,
+    description:
+      'Python AST finds incompatible APIs and pinpoints exact files and line numbers.',
   },
   {
     number: '03',
-    icon: Wand2,
     title: 'Generate',
-    description: 'Qwen2.5-Coder writes targeted replacement patches adhering strictly to new framework APIs.',
+    icon: Wand2,
+    description:
+      'Qwen2.5-Coder creates targeted replacement patches with explanations.',
   },
   {
     number: '04',
-    icon: ShieldCheck,
     title: 'Verify',
-    description: 'Pytest runs in an isolated subprocess. If tests fail, an AI self-correction loop attempts up to 3 fixes.',
+    icon: ShieldCheck,
+    description:
+      'Runs pytest in an isolated sandbox. Captures real test results and logs.',
   },
   {
     number: '05',
-    icon: CheckCircle,
     title: 'Approve',
-    description: 'Review side-by-side Monaco diffs and verification reports before applying code to your codebase.',
+    icon: CheckCircle,
+    description:
+      'Review side-by-side diffs and approve the proposed changes.',
   },
 ];
 
 export function WorkflowSection() {
   return (
-    <section className="py-24 bg-obsidian border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-champagne/10 border border-champagne/20 text-xs font-mono text-champagne uppercase mb-3">
-            Workflow Protocol
+    <section id="how-it-works" className="py-24 lg:py-24 bg-[#090D14] border-b border-[#2B3544]">
+      <div className="container-enterprise">
+        {/* Header matching Image 1 */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#151D2A] border border-[#2B3544] text-[10px] sm:text-[11px] font-body tracking-widest text-[#54C7BE] uppercase mb-4 shadow-sm">
+            <span>• THE PROCESS •</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold font-heading text-ivory tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-[38px] font-extrabold font-heading text-[#F2F0EA] tracking-tight">
             How VERYNTH Operates
           </h2>
-          <p className="mt-3 text-secondary-text text-sm sm:text-base">
-            From raw repository import to verified, developer-signed patch in five structured phases.
+          <p className="text-base sm:text-lg text-[#9AA7B5] mt-4 leading-relaxed font-body">
+            From repository import to verified, developer-approved migration in five stages.
           </p>
         </div>
 
-        {/* Workflow Steps: Horizontal on Desktop, Vertical on Mobile */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
+        {/* 5-Stage Connected Progression Flow matching Image 1 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-8 items-stretch">
           {steps.map((step, idx) => {
             const Icon = step.icon;
+            const isLast = idx === steps.length - 1;
+
             return (
-              <div
-                key={step.number}
-                className="relative rounded-2xl bg-midnight-slate border border-border p-6 flex flex-col justify-between hover:border-teal/40 transition-all group"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold font-heading text-champagne/40 group-hover:text-champagne transition-colors">
-                      {step.number}
-                    </span>
-                    <div className="w-9 h-9 rounded-lg bg-elevated border border-border flex items-center justify-center text-teal">
-                      <Icon size={18} />
+              <div key={step.number} className="relative flex items-center">
+                <div className="w-full rounded-2xl bg-[#151D2A] border border-[#2B3544] p-6 sm:p-7 flex flex-col justify-between hover:border-[#54C7BE]/50 hover:bg-[#151D2A]/90 transition-all duration-300 shadow-md h-full group">
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-11 h-11 rounded-xl bg-[#090D14] border border-[#2B3544] flex items-center justify-center text-[#54C7BE] group-hover:scale-105 transition-transform duration-200">
+                        <Icon size={20} />
+                      </div>
+                      <span className="text-xs font-body font-bold text-[#C6B99A]/60 group-hover:text-[#C6B99A] transition-colors">
+                        {step.number}
+                      </span>
                     </div>
+
+                    <h3 className="text-lg font-bold font-heading text-[#F2F0EA] mb-2.5">
+                      {step.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#9AA7B5] leading-relaxed font-body">
+                      {step.description}
+                    </p>
                   </div>
-                  <h3 className="text-base font-bold font-heading text-ivory mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-xs text-secondary-text leading-relaxed">
-                    {step.description}
-                  </p>
                 </div>
 
-                {/* Arrow connector between steps on desktop */}
-                {idx < steps.length - 1 && (
-                  <div className="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-border">
-                    <ArrowRight size={14} />
+                {/* Connector Arrow on Desktop */}
+                {!isLast && (
+                  <div className="hidden xl:flex absolute -right-7 z-20 w-6 h-6 rounded-full bg-[#090D14] border border-[#54C7BE]/40 text-[#54C7BE] items-center justify-center shadow-md">
+                    <ArrowRight size={12} />
                   </div>
                 )}
               </div>
@@ -91,4 +105,3 @@ export function WorkflowSection() {
     </section>
   );
 }
-

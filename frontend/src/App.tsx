@@ -35,6 +35,7 @@ export default function App() {
           <Route path="/projects/:id/dependencies" element={<ProjectDetailPage />} />
           <Route path="/migrations/:id" element={<MigrationWorkspacePage />} />
           <Route path="/migrations/:id/verification" element={<VerificationResultsPage />} />
+          <Route path="/verification/:id" element={<VerificationResultsPage />} />
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>

@@ -1,43 +1,44 @@
-import { type InputHTMLAttributes, forwardRef } from 'react';
+import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
+  helperText?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, icon, className = '', ...props }, ref) => {
+  ({ label, error, icon, helperText, className = '', id, ...props }, ref) => {
+    const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+
     return (
-      <div className="w-full">
+      <div className="w-full space-y-1.5">
         {label && (
-          <label className="block text-sm font-medium text-secondary-text mb-1.5">
+          <label htmlFor={inputId} className="block text-xs font-medium text-[#9AA7B5] tracking-wide">
             {label}
           </label>
         )}
-        <div className="relative">
+        <div className="relative flex items-center">
           {icon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-text">
+            <div className="absolute left-3.5 flex items-center pointer-events-none text-[#9AA7B5]">
               {icon}
             </div>
           )}
           <input
             ref={ref}
-            className={`
-              w-full bg-elevated border border-border rounded-lg px-4 py-2.5 text-ivory
-              placeholder:text-secondary-text/50
-              focus:outline-none focus:ring-2 focus:ring-champagne/30 focus:border-champagne/50
-              transition-all duration-200
-              ${icon ? 'pl-10' : ''}
-              ${error ? 'border-error focus:ring-error/30 focus:border-error/50' : ''}
-              ${className}
-            `}
+            id={inputId}
+            className={`w-full rounded-lg bg-[#090D14] border px-4 py-2.5 text-sm text-[#F2F0EA] placeholder-[#9AA7B5]/50 transition-all duration-200 outline-none ${
+              icon ? 'pl-10' : ''
+            } ${
+              error
+                ? 'border-[#E47979] focus:border-[#E47979] focus:ring-1 focus:ring-[#E47979]'
+                : 'border-[#2B3544] hover:border-[#3E4C60] focus:border-[#C6B99A] focus:ring-1 focus:ring-[#C6B99A]/50'
+            } ${className}`}
             {...props}
           />
         </div>
-        {error && (
-          <p className="mt-1 text-sm text-error">{error}</p>
-        )}
+        {error && <p className="text-xs text-[#E47979] font-medium">{error}</p>}
+        {helperText && !error && <p className="text-xs text-[#9AA7B5]">{helperText}</p>}
       </div>
     );
   }

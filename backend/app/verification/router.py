@@ -1,5 +1,7 @@
 """Verification API router (mainly handled via migrations router, but provides direct access)."""
 
+from __future__ import annotations
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession

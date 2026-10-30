@@ -1,46 +1,27 @@
 import { create } from 'zustand';
 import { api } from '../services/api';
 import type { AuthState } from '../types';
-
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore=create<AuthState>((set) => ({
   user: null,
-  token: localStorage.getItem('verynth_token'),
-  isAuthenticated: !!localStorage.getItem('verynth_token'),
+  token: localStorage.getItem('verynth_token')||sessionStorage.getItem('verynth_token'),
+  isAuthenticated: !!(localStorage.getItem('verynth_token')||sessionStorage.getItem('verynth_token')),
   isLoading: false,
-
-  login: async (email: string, password: string) => {
+  login: async (email,password) => {
     set({ isLoading: true });
     try {
-      const response = await api.post<{ token: string; user: any }>('/auth/signin', { email, password });
-      const { token, user } = response.data;
-      localStorage.setItem('verynth_token', token);
-      set({ user, token, isAuthenticated: true, isLoading: false });
-    } catch (error) {
-      set({ isLoading: false });
-      throw error;
-    }
+      const { data }=await api.post<{ token: string; user: any }>('/auth/signin',{ email,password });
+      localStorage.removeItem('verynth_token'); sessionStorage.removeItem('verynth_token');
+      (sessionStorage.getItem('verynth_remember')==='false'? sessionStorage:localStorage).setItem('verynth_token',data.token);
+      set({ ...data,isAuthenticated: true });
+    } finally { set({ isLoading: false }); }
   },
-
-  signup: async (name: string, email: string, password: string) => {
+  signup: async (name,email,password) => {
     set({ isLoading: true });
     try {
-      const response = await api.post<{ token: string; user: any }>('/auth/signup', { name, email, password });
-      const { token, user } = response.data;
-      localStorage.setItem('verynth_token', token);
-      set({ user, token, isAuthenticated: true, isLoading: false });
-    } catch (error) {
-      set({ isLoading: false });
-      throw error;
-    }
+      const { data }=await api.post<{ token: string; user: any }>('/auth/signup',{ name,email,password });
+      localStorage.setItem('verynth_token',data.token); set({ ...data,isAuthenticated: true });
+    } finally { set({ isLoading: false }); }
   },
-
-  logout: () => {
-    localStorage.removeItem('verynth_token');
-    set({ user: null, token: null, isAuthenticated: false });
-  },
-
-  setToken: (token: string) => {
-    localStorage.setItem('verynth_token', token);
-    set({ token, isAuthenticated: true });
-  },
+  logout: () => { localStorage.removeItem('verynth_token'); sessionStorage.removeItem('verynth_token'); set({ user: null,token: null,isAuthenticated: false }); },
+  setToken: token => { localStorage.setItem('verynth_token',token); set({ token,isAuthenticated: true }); },
 }));

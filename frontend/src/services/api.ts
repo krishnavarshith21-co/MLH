@@ -11,7 +11,7 @@ class ApiClient {
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
     };
-    const token = localStorage.getItem('verynth_token');
+    const token = localStorage.getItem('verynth_token') || sessionStorage.getItem('verynth_token');
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -29,14 +29,13 @@ class ApiClient {
     });
 
     if (response.status === 401) {
-      localStorage.removeItem('verynth_token');
-      window.location.href = '/signin';
+      console.warn('API 401 Unauthorized for', endpoint);
       throw new Error('Unauthorized');
     }
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: 'Request failed' }));
-      throw new Error(error.message || `HTTP ${response.status}`);
+      throw new Error(error.message || (typeof error.detail === 'string' ? error.detail : error.detail?.map((e: any) => e.msg).join('; ')) || `HTTP ${response.status}`);
     }
 
     const data = await response.json();

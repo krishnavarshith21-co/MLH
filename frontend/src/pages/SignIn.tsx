@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock, Mail, ArrowRight, Sparkles, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, AlertCircle, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
+import { OrbitSpheres } from '../components/three/OrbitSpheres';
 import { useAuthStore } from '../store/authStore';
 
 export function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -23,168 +23,183 @@ export function SignInPage() {
     setError(null);
 
     if (!email || !password) {
-      setError('Please fill in all fields');
+      setError('Please provide your email and password.');
       return;
     }
 
     setLoading(true);
     try {
+      sessionStorage.setItem('verynth_remember', String(rememberMe));
       await login(email, password);
       navigate(from, { replace: true });
     } catch (err: any) {
-      setError(err.message || 'Invalid email or password');
+      setError(err.message || 'Invalid email or password.');
     } finally {
       setLoading(false);
     }
   };
 
-  const fillDemo = () => {
-    setEmail('engineer@verynth.dev');
-    setPassword('Password123!');
-  };
-
   return (
-    <div className="min-h-screen bg-obsidian text-ivory flex">
-      {/* Left Column: Branded Visual (Desktop only) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-midnight-slate to-obsidian p-12 flex-col justify-between border-r border-border overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-champagne/10 rounded-full blur-[120px] pointer-events-none" />
-
-        {/* Brand */}
-        <Link to="/" className="flex items-center gap-2.5 z-10 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-champagne to-teal flex items-center justify-center">
-            <span className="text-obsidian font-bold text-sm font-heading">V</span>
-          </div>
-          <span className="text-xl font-bold font-heading text-ivory group-hover:text-champagne transition-colors">
-            VERYNTH
-          </span>
-        </Link>
-
-        {/* Center Editorial Visual */}
-        <div className="z-10 max-w-md my-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal/10 border border-teal/20 text-xs font-mono text-teal uppercase mb-4">
-            <Sparkles size={13} />
-            Enterprise Verification
-          </div>
-          <h2 className="text-3xl font-bold font-heading text-ivory leading-tight">
-            Automate breaking change refactorings with test-backed certainty.
-          </h2>
-          <p className="mt-4 text-sm text-secondary-text leading-relaxed">
-            Connect directly to open-weight Qwen2.5-Coder models and run isolated verification tests before merging updates.
-          </p>
-
-          <div className="mt-8 p-4 rounded-xl bg-elevated/70 border border-border/80 text-xs font-mono text-secondary-text">
-            <span className="text-champagne font-semibold block mb-1">Pandas 2.0 Migration Sandbox Ready:</span>
-            <span>$ pytest tests/ --sandbox # 12 passing</span>
-          </div>
-        </div>
-
-        {/* Footer info */}
-        <div className="z-10 text-xs text-secondary-text font-mono">
-          <span>SMRU Hack Day 2026 • Best Open-Source AI Product</span>
-        </div>
-      </div>
-
-      {/* Right Column: Authentication Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
-        <div className="w-full max-w-md">
-          {/* Mobile Logo */}
-          <div className="lg:hidden mb-8">
-            <Link to="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-champagne to-teal flex items-center justify-center">
-                <span className="text-obsidian font-bold text-sm font-heading">V</span>
+    <div className="min-h-screen bg-[#090D14] text-[#F2F0EA] flex items-center justify-center p-4 sm:p-6 lg:p-10">
+      {/* Container holding the split view - View 5 & Image 8 in reference */}
+      <div className="w-full max-w-6xl rounded-3xl bg-[#151D2A] border border-[#2B3544] shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+        {/* LEFT COLUMN: Form */}
+        <div className="p-8 sm:p-12 lg:p-14 flex flex-col justify-between">
+          <div>
+            {/* Top Brand Logo */}
+            <div className="flex items-center gap-2.5 mb-8">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#C6B99A] via-[#8FA39A] to-[#54C7BE] p-[1px] shadow-sm">
+                <div className="w-full h-full rounded-[7px] bg-[#090D14] flex items-center justify-center">
+                  <span className="text-[#F2F0EA] font-extrabold text-xs font-heading">V</span>
+                </div>
               </div>
-              <span className="text-xl font-bold font-heading text-ivory">VERYNTH</span>
-            </Link>
-          </div>
-
-          <h1 className="text-2xl sm:text-3xl font-bold font-heading text-ivory">
-            Sign In to VERYNTH
-          </h1>
-          <p className="text-sm text-secondary-text mt-2">
-            Access your dependency migration workspace and analysis reports.
-          </p>
-
-          {/* Demo Quick Button */}
-          <div className="mt-4 p-3 rounded-lg bg-elevated/50 border border-border flex items-center justify-between">
-            <span className="text-xs text-secondary-text">Quick demo credentials:</span>
-            <button
-              type="button"
-              onClick={fillDemo}
-              className="text-xs font-mono text-champagne hover:underline font-medium"
-            >
-              Use demo account
-            </button>
-          </div>
-
-          {error && (
-            <div className="mt-4 p-3 rounded-lg bg-error/10 border border-error/30 text-error text-xs flex items-center gap-2">
-              <AlertCircle size={15} />
-              <span>{error}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <div>
-              <label className="block text-xs font-medium text-secondary-text uppercase tracking-wider mb-1.5">
-                Work Email
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@company.com"
-                  required
-                  className="w-full px-4 py-2.5 rounded-xl bg-midnight-slate border border-border text-sm text-ivory placeholder-secondary-text/50 focus:outline-none focus:border-champagne transition-colors"
-                />
+              <div className="flex flex-col">
+                <span className="text-sm font-bold font-heading text-[#F2F0EA] tracking-wide leading-none">
+                  VERYNTH
+                </span>
+                <span className="text-[9px] font-body text-[#54C7BE] tracking-widest uppercase mt-0.5">
+                  AI EVOLUTION
+                </span>
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-medium text-secondary-text uppercase tracking-wider mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  required
-                  className="w-full px-4 py-2.5 rounded-xl bg-midnight-slate border border-border text-sm text-ivory placeholder-secondary-text/50 focus:outline-none focus:border-champagne transition-colors pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-text hover:text-ivory"
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
+            <div className="mb-8">
+              <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-[#F2F0EA] tracking-tight">
+                Welcome Back
+              </h1>
+              <p className="text-base text-[#9AA7B5] mt-3 font-body">
+                Sign in to continue your journey with safer software evolution.
+              </p>
             </div>
 
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              className="w-full mt-6"
-              disabled={loading}
-              icon={<ArrowRight size={16} />}
-            >
-              {loading ? 'Authenticating...' : 'Sign In'}
-            </Button>
-          </form>
+            {error && (
+              <div className="p-4 rounded-xl bg-[#E47979]/10 border border-[#E47979]/30 text-[#E47979] text-xs flex items-start gap-2.5 mb-6">
+                <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                <span>{error}</span>
+              </div>
+            )}
 
-          <p className="text-center text-xs text-secondary-text mt-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="email" className="block text-xs font-body font-medium text-[#9AA7B5] uppercase mb-2.5">
+                  Email
+                </label>
+                <div className="relative">
+                  <Mail
+                    size={16}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9AA7B5]"
+                  />
+                  <input
+                    id="email" autoComplete="email" required type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#090D14] border border-[#2B3544] text-sm text-[#F2F0EA] placeholder-[#9AA7B5]/50 focus:outline-none focus:border-[#C6B99A] transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-xs font-body font-medium text-[#9AA7B5] uppercase mb-2.5">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock
+                    size={16}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9AA7B5]"
+                  />
+                  <input
+                    id="password" autoComplete="current-password" required type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    className="w-full pl-10 pr-10 py-3 rounded-xl bg-[#090D14] border border-[#2B3544] text-sm text-[#F2F0EA] placeholder-[#9AA7B5]/50 focus:outline-none focus:border-[#C6B99A] transition-colors"
+                  />
+                  <button
+                    type="button"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'} onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9AA7B5] hover:text-[#F2F0EA]"
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs">
+                <label className="flex items-center gap-2 cursor-pointer text-[#9AA7B5]">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="rounded bg-[#090D14] border-[#2B3544] text-[#C6B99A] focus:ring-0"
+                  />
+                  <span>Keep me signed in</span>
+                </label>
+
+              </div>
+
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                loading={loading}
+                icon={<ArrowRight size={16} />}
+                iconPosition="right"
+                className="w-full bg-[#C6B99A] text-[#090D14] hover:bg-[#DDD2BA] font-semibold h-12 text-sm justify-center rounded-[10px]"
+              >
+                Sign In
+              </Button>
+            </form>
+
+            {/* Divider 'or' */}
+            <div className="relative my-6 text-center">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-[#2B3544]" />
+              </div>
+              <span className="relative px-3 bg-[#151D2A] text-xs text-[#9AA7B5] font-body">
+                or
+              </span>
+            </div>
+          </div>
+
+          <div className="pt-2 text-center text-xs text-[#9AA7B5]">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-champagne font-medium hover:underline">
-              Sign up now
+            <Link to="/signup" className="text-[#C6B99A] hover:underline font-semibold ml-1 inline-flex items-center gap-1">
+              Sign up <ArrowRight size={12} />
             </Link>
-          </p>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: Luxury 3D Orbiting Spheres Showcase Card */}
+        <div className="hidden lg:flex relative bg-gradient-to-br from-[#121926] via-[#090D14] to-[#121926] p-10 flex-col justify-between items-center text-center border-l border-[#2B3544] overflow-hidden">
+          {/* Subtle ambient lighting */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(84,199,190,0.12)_0,transparent_70%)] pointer-events-none" />
+
+          {/* 3D Orbiting Spheres Canvas */}
+          <div className="w-full flex-1 flex items-center justify-center my-auto">
+            <OrbitSpheres />
+          </div>
+
+          {/* Showcase Info at Bottom */}
+          <div className="relative z-10 max-w-sm w-full pt-4 border-t border-[#2B3544]/60">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <span className="text-xl font-extrabold font-heading text-[#F2F0EA] tracking-wider">
+                VERYNTH
+              </span>
+            </div>
+            <p className="text-[10px] font-body tracking-widest text-[#54C7BE] uppercase mb-4">
+              AI EVOLUTION
+            </p>
+            <div className="w-12 h-[1px] bg-[#2B3544] mx-auto mb-4" />
+            <h3 className="text-lg font-bold font-heading text-[#F2F0EA] mb-2">
+              Upgrade With Confidence.
+            </h3>
+            <p className="text-xs text-[#9AA7B5] leading-relaxed font-body">
+              Open-weight AI for safer software evolution.
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-

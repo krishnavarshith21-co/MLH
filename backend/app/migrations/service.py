@@ -1,5 +1,7 @@
 """Migrations service — create, manage, and generate code migrations."""
 
+from __future__ import annotations
+
 import difflib
 from pathlib import Path
 

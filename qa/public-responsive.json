@@ -1,0 +1,296 @@
+[
+  {
+    "width": 1920,
+    "route": "/",
+    "heading": "Upgrade With Confidence.",
+    "overflow": false,
+    "viewport": 1920
+  },
+  {
+    "width": 1920,
+    "route": "/features",
+    "heading": "Powerful Features for Safer Software Evolution",
+    "overflow": false,
+    "viewport": 1920
+  },
+  {
+    "width": 1920,
+    "route": "/how-it-works",
+    "heading": "How VERYNTH Operates",
+    "overflow": false,
+    "viewport": 1920
+  },
+  {
+    "width": 1920,
+    "route": "/open-source",
+    "heading": "Transparent. Open Source. Built for Real Developers.",
+    "overflow": false,
+    "viewport": 1920
+  },
+  {
+    "width": 1920,
+    "route": "/signin",
+    "heading": "Welcome Back",
+    "overflow": false,
+    "viewport": 1920
+  },
+  {
+    "width": 1920,
+    "route": "/signup",
+    "heading": "Create Your Account",
+    "overflow": false,
+    "viewport": 1920
+  },
+  {
+    "width": 1440,
+    "route": "/",
+    "heading": "Upgrade With Confidence.",
+    "overflow": false,
+    "viewport": 1440
+  },
+  {
+    "width": 1440,
+    "route": "/features",
+    "heading": "Powerful Features for Safer Software Evolution",
+    "overflow": false,
+    "viewport": 1440
+  },
+  {
+    "width": 1440,
+    "route": "/how-it-works",
+    "heading": "How VERYNTH Operates",
+    "overflow": false,
+    "viewport": 1440
+  },
+  {
+    "width": 1440,
+    "route": "/open-source",
+    "heading": "Transparent. Open Source. Built for Real Developers.",
+    "overflow": false,
+    "viewport": 1440
+  },
+  {
+    "width": 1440,
+    "route": "/signin",
+    "heading": "Welcome Back",
+    "overflow": false,
+    "viewport": 1440
+  },
+  {
+    "width": 1440,
+    "route": "/signup",
+    "heading": "Create Your Account",
+    "overflow": false,
+    "viewport": 1440
+  },
+  {
+    "width": 1280,
+    "route": "/",
+    "heading": "Upgrade With Confidence.",
+    "overflow": false,
+    "viewport": 1280
+  },
+  {
+    "width": 1280,
+    "route": "/features",
+    "heading": "Powerful Features for Safer Software Evolution",
+    "overflow": false,
+    "viewport": 1280
+  },
+  {
+    "width": 1280,
+    "route": "/how-it-works",
+    "heading": "How VERYNTH Operates",
+    "overflow": false,
+    "viewport": 1280
+  },
+  {
+    "width": 1280,
+    "route": "/open-source",
+    "heading": "Transparent. Open Source. Built for Real Developers.",
+    "overflow": false,
+    "viewport": 1280
+  },
+  {
+    "width": 1280,
+    "route": "/signin",
+    "heading": "Welcome Back",
+    "overflow": false,
+    "viewport": 1280
+  },
+  {
+    "width": 1280,
+    "route": "/signup",
+    "heading": "Create Your Account",
+    "overflow": false,
+    "viewport": 1280
+  },
+  {
+    "width": 1024,
+    "route": "/",
+    "heading": "Upgrade With Confidence.",
+    "overflow": false,
+    "viewport": 1024
+  },
+  {
+    "width": 1024,
+    "route": "/features",
+    "heading": "Powerful Features for Safer Software Evolution",
+    "overflow": false,
+    "viewport": 1024
+  },
+  {
+    "width": 1024,
+    "route": "/how-it-works",
+    "heading": "How VERYNTH Operates",
+    "overflow": false,
+    "viewport": 1024
+  },
+  {
+    "width": 1024,
+    "route": "/open-source",
+    "heading": "Transparent. Open Source. Built for Real Developers.",
+    "overflow": false,
+    "viewport": 1024
+  },
+  {
+    "width": 1024,
+    "route": "/signin",
+    "heading": "Welcome Back",
+    "overflow": false,
+    "viewport": 1024
+  },
+  {
+    "width": 1024,
+    "route": "/signup",
+    "heading": "Create Your Account",
+    "overflow": false,
+    "viewport": 1024
+  },
+  {
+    "width": 768,
+    "route": "/",
+    "heading": "Upgrade With Confidence.",
+    "overflow": false,
+    "viewport": 768
+  },
+  {
+    "width": 768,
+    "route": "/features",
+    "heading": "Powerful Features for Safer Software Evolution",
+    "overflow": false,
+    "viewport": 768
+  },
+  {
+    "width": 768,
+    "route": "/how-it-works",
+    "heading": "How VERYNTH Operates",
+    "overflow": false,
+    "viewport": 768
+  },
+  {
+    "width": 768,
+    "route": "/open-source",
+    "heading": "Transparent. Open Source. Built for Real Developers.",
+    "overflow": false,
+    "viewport": 768
+  },
+  {
+    "width": 768,
+    "route": "/signin",
+    "heading": "Welcome Back",
+    "overflow": false,
+    "viewport": 768
+  },
+  {
+    "width": 768,
+    "route": "/signup",
+    "heading": "Create Your Account",
+    "overflow": false,
+    "viewport": 768
+  },
+  {
+    "width": 390,
+    "route": "/",
+    "heading": "Upgrade With Confidence.",
+    "overflow": false,
+    "viewport": 390
+  },
+  {
+    "width": 390,
+    "route": "/features",
+    "heading": "Powerful Features for Safer Software Evolution",
+    "overflow": false,
+    "viewport": 390
+  },
+  {
+    "width": 390,
+    "route": "/how-it-works",
+    "heading": "How VERYNTH Operates",
+    "overflow": false,
+    "viewport": 390
+  },
+  {
+    "width": 390,
+    "route": "/open-source",
+    "heading": "Transparent. Open Source. Built for Real Developers.",
+    "overflow": false,
+    "viewport": 390
+  },
+  {
+    "width": 390,
+    "route": "/signin",
+    "heading": "Welcome Back",
+    "overflow": false,
+    "viewport": 390
+  },
+  {
+    "width": 390,
+    "route": "/signup",
+    "heading": "Create Your Account",
+    "overflow": false,
+    "viewport": 390
+  },
+  {
+    "width": 360,
+    "route": "/",
+    "heading": "Upgrade With Confidence.",
+    "overflow": false,
+    "viewport": 360
+  },
+  {
+    "width": 360,
+    "route": "/features",
+    "heading": "Powerful Features for Safer Software Evolution",
+    "overflow": false,
+    "viewport": 360
+  },
+  {
+    "width": 360,
+    "route": "/how-it-works",
+    "heading": "How VERYNTH Operates",
+    "overflow": false,
+    "viewport": 360
+  },
+  {
+    "width": 360,
+    "route": "/open-source",
+    "heading": "Transparent. Open Source. Built for Real Developers.",
+    "overflow": false,
+    "viewport": 360
+  },
+  {
+    "width": 360,
+    "route": "/signin",
+    "heading": "Welcome Back",
+    "overflow": false,
+    "viewport": 360
+  },
+  {
+    "width": 360,
+    "route": "/signup",
+    "heading": "Create Your Account",
+    "overflow": false,
+    "viewport": 360
+  }
+]

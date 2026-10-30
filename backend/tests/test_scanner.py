@@ -1,5 +1,7 @@
 """Tests for requirements.txt parsing and version checks."""
 
+from __future__ import annotations
+
 from app.analysis.scanner import check_breaking_changes, parse_requirements
 
 

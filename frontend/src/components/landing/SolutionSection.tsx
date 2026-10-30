@@ -1,121 +1,88 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Search, Binary, Sparkles, CheckCheck, UserCheck, Layers, GitPullRequest } from 'lucide-react';
+import {
+  Search,
+  Sparkles,
+  Binary,
+  ShieldCheck,
+  UserCheck,
+  History,
+} from 'lucide-react';
+
+const features = [
+  {
+    icon: Search,
+    title: 'Dependency Intelligence',
+    description: 'Detects breaking API changes across your codebase.',
+  },
+  {
+    icon: Sparkles,
+    title: 'AI Migration Engine',
+    description: 'Generates targeted code patches using Qwen2.5-Coder.',
+  },
+  {
+    icon: Binary,
+    title: 'Compatibility Analysis',
+    description: 'Python AST analysis to find exact affected locations.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Automated Verification',
+    description: 'Runs pytest in isolated sandbox environments.',
+  },
+  {
+    icon: UserCheck,
+    title: 'Developer Approval',
+    description: 'Human-in-the-loop review before applying changes.',
+  },
+  {
+    icon: History,
+    title: 'Full Migration History',
+    description: 'Track, compare and review detailed reports.',
+  },
+];
 
 export function SolutionSection() {
   return (
-    <section className="py-24 bg-midnight-slate/50 border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="features" className="py-24 lg:py-24 bg-[#090D14] border-b border-[#2B3544]">
+      <div className="container-enterprise">
+        {/* Centered Header: View 2 in reference sheet */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal/10 border border-teal/20 text-xs font-mono text-teal uppercase mb-3">
-            Architectural Precision
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#151D2A] border border-[#2B3544] text-[10px] sm:text-[11px] font-body tracking-widest text-[#54C7BE] uppercase mb-4 shadow-sm">
+            <span>• KEY CAPABILITIES •</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold font-heading text-ivory tracking-tight">
-            The Five Pillars of Safe Evolution
+          <h2 className="text-3xl sm:text-4xl md:text-[38px] font-extrabold font-heading text-[#F2F0EA] tracking-tight">
+            Powerful Features for Safer Software Evolution
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-secondary-text">
-            VERYNTH replaces guesswork with deterministic static analysis, open-weight reasoning, and sandboxed test validation.
+          <p className="text-base sm:text-lg text-[#9AA7B5] mt-4 leading-relaxed font-body">
+            Everything you need to analyze, migrate, and verify dependency upgrades with confidence.
           </p>
         </div>
 
-        {/* Varied Grid Layout for the 5 Capabilities */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* 1. Dependency Intelligence (Large 7-col) */}
-          <div className="md:col-span-7 rounded-2xl bg-midnight-slate border border-border p-8 flex flex-col justify-between hover:border-teal/40 transition-colors group">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-teal/10 border border-teal/30 flex items-center justify-center text-teal mb-6">
-                <Search size={20} />
+        {/* 3x2 Grid of 6 Feature Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+          {features.map((feat) => {
+            const Icon = feat.icon;
+            return (
+              <div
+                key={feat.title}
+                className="rounded-2xl bg-[#151D2A] border border-[#2B3544] p-8 flex flex-col justify-between hover:border-[#54C7BE]/50 hover:bg-[#151D2A]/90 transition-all duration-300 shadow-md h-full group"
+              >
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-[#1D2735] border border-[#2B3544] flex items-center justify-center text-[#54C7BE] mb-6 group-hover:scale-105 transition-transform duration-200">
+                    <Icon size={22} />
+                  </div>
+                  <h3 className="text-xl font-bold font-heading text-[#F2F0EA] mb-3">
+                    {feat.title}
+                  </h3>
+                  <p className="text-[15px] text-[#9AA7B5] leading-relaxed font-body">
+                    {feat.description}
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-bold font-heading text-ivory group-hover:text-teal transition-colors">
-                1. Dependency Intelligence
-              </h3>
-              <p className="mt-2 text-sm text-secondary-text leading-relaxed">
-                Automatically scans <code className="text-champagne font-mono">requirements.txt</code> and project lockfiles, cross-referencing package registries to evaluate breaking API changelogs and version gaps.
-              </p>
-            </div>
-            <div className="mt-6 pt-6 border-t border-border/60 flex items-center gap-4 text-xs font-mono text-secondary-text">
-              <span className="flex items-center gap-1.5 text-teal">
-                <Layers size={14} /> PyPI Metadata Sync
-              </span>
-              <span>•</span>
-              <span>Semantic Version Audit</span>
-            </div>
-          </div>
-
-          {/* 2. Compatibility Analysis (5-col) */}
-          <div className="md:col-span-5 rounded-2xl bg-midnight-slate border border-border p-8 flex flex-col justify-between hover:border-champagne/40 transition-colors group">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-champagne/10 border border-champagne/30 flex items-center justify-center text-champagne mb-6">
-                <Binary size={20} />
-              </div>
-              <h3 className="text-xl font-bold font-heading text-ivory group-hover:text-champagne transition-colors">
-                2. Compatibility Analysis
-              </h3>
-              <p className="mt-2 text-sm text-secondary-text leading-relaxed">
-                Uses Python Abstract Syntax Tree (AST) parsing to locate precise callers, methods, and syntax incompatible with target versions.
-              </p>
-            </div>
-            <div className="mt-6 pt-6 border-t border-border/60 text-xs font-mono text-champagne">
-              Exact AST Node Pinpointing
-            </div>
-          </div>
-
-          {/* 3. AI Migration Engine (4-col) */}
-          <div className="md:col-span-4 rounded-2xl bg-elevated/80 border border-border p-8 flex flex-col justify-between hover:border-teal/40 transition-colors group">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-teal/10 border border-teal/30 flex items-center justify-center text-teal mb-6">
-                <Sparkles size={20} />
-              </div>
-              <h3 className="text-lg font-bold font-heading text-ivory group-hover:text-teal transition-colors">
-                3. AI Migration Engine
-              </h3>
-              <p className="mt-2 text-xs sm:text-sm text-secondary-text leading-relaxed">
-                Leverages Qwen2.5-Coder-7B-Instruct to generate targeted, semantically identical code refactorings and explainable unified diffs.
-              </p>
-            </div>
-            <div className="mt-6 pt-4 border-t border-border/40 text-[11px] font-mono text-secondary-text">
-              Apache 2.0 Open-Weight Model
-            </div>
-          </div>
-
-          {/* 4. Automated Verification (4-col) */}
-          <div className="md:col-span-4 rounded-2xl bg-midnight-slate border border-border p-8 flex flex-col justify-between hover:border-success/40 transition-colors group">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-success/10 border border-success/30 flex items-center justify-center text-success mb-6">
-                <CheckCheck size={20} />
-              </div>
-              <h3 className="text-lg font-bold font-heading text-ivory group-hover:text-success transition-colors">
-                4. Automated Verification
-              </h3>
-              <p className="mt-2 text-xs sm:text-sm text-secondary-text leading-relaxed">
-                Runs relevant unit tests in an isolated, sandboxed subprocess environment. Captures real output and logs actual test results.
-              </p>
-            </div>
-            <div className="mt-6 pt-4 border-t border-border/40 text-[11px] font-mono text-success">
-              Sandboxed Pytest Execution
-            </div>
-          </div>
-
-          {/* 5. Human-Controlled Approval (4-col) */}
-          <div className="md:col-span-4 rounded-2xl bg-midnight-slate border border-border p-8 flex flex-col justify-between hover:border-champagne/40 transition-colors group">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-champagne/10 border border-champagne/30 flex items-center justify-center text-champagne mb-6">
-                <UserCheck size={20} />
-              </div>
-              <h3 className="text-lg font-bold font-heading text-ivory group-hover:text-champagne transition-colors">
-                5. Developer Approval
-              </h3>
-              <p className="mt-2 text-xs sm:text-sm text-secondary-text leading-relaxed">
-                Explicit developer sign-off required. Inspect changes in an interactive code diff before committing to project files.
-              </p>
-            </div>
-            <div className="mt-6 pt-4 border-t border-border/40 text-[11px] font-mono text-champagne">
-              Zero Unattended Merges
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
-

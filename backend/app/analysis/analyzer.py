@@ -1,5 +1,7 @@
 """AST-based compatibility analyzer — finds deprecated API usage patterns in Python source."""
 
+from __future__ import annotations
+
 import ast
 from dataclasses import dataclass
 from pathlib import Path

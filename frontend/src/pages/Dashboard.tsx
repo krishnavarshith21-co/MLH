@@ -2,15 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   FolderGit2,
-  GitBranch,
-  ShieldCheck,
-  AlertTriangle,
-  ArrowRight,
-  Sparkles,
-  RefreshCw,
-  Plus,
-  Layers,
+  ArrowLeftRight,
   CheckCircle2,
+  Clock,
+  ArrowRight,
+  Plus,
+  MoreVertical,
+  FileCode2,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { api } from '../services/api';
@@ -18,232 +16,201 @@ import { api } from '../services/api';
 export function DashboardPage() {
   const [projects, setProjects] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [projRes, histRes] = await Promise.all([
-        api.get<any[]>('/projects'),
-        api.get<any[]>('/history'),
-      ]);
-      setProjects(projRes.data || []);
-      setHistory(histRes.data || []);
-    } catch (err: any) {
-      setError(err.message || 'Failed to load dashboard data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [res, migrations] = await Promise.all([api.get<any[]>('/projects'), api.get<any[]>('/history')]);
+        setHistory(migrations.data);
+        setProjects(res.data.map(p => ({...p, versionSub:p.language, dependencies:p.dep_file ? `${p.dep_file.split('\n').filter((line: string) => line.trim() && !line.trim().startsWith('#')).length} declared packages` : 'Not analyzed', lastMigration:migrations.data.find(m => m.project_name === p.name)?.created_at ? new Date(migrations.data.find(m => m.project_name === p.name).created_at).toLocaleDateString() : '—', updated:new Date(p.created_at).toLocaleDateString()})));
+      } catch (err: any) { setError(err.message); } finally { setLoading(false); }
+    };
     fetchData();
   }, []);
 
-  const totalProjects = projects.length;
-  const totalMigrations = history.length;
-  const approvedMigrations = history.filter((h) => h.status === 'approved' || h.status === 'verified').length;
-  const pendingMigrations = history.filter((h) => h.status === 'pending' || h.status === 'generating').length;
-
   return (
-    <div className="space-y-8">
-      {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/80">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold font-heading text-ivory">
-            Engineering Overview
-          </h1>
-          <p className="text-sm text-secondary-text mt-1">
-            Real-time status of dependencies, static AST audits, and sandboxed AI migrations.
-          </p>
+    <div className="workspace">
+      {error && <p role="alert" className="notice error">{error}</p>}
+      {/* Page Heading - Image 9 */}
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-[#F2F0EA] tracking-tight">
+          Project Overview
+        </h1>
+        <p className="text-sm text-[#9AA7B5] mt-1 font-body">
+          Manage your dependency migrations with confidence.
+        </p>
+      </div>
+
+      {/* 4 Metric / KPI Cards - Image 9 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+        {/* Card 1: Total Projects */}
+        <div className="rounded-2xl bg-[#151D2A] border border-[#2B3544] p-6 min-h-[140px] flex items-center justify-between shadow-md hover:border-[#54C7BE]/40 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#54C7BE]/15 border border-[#54C7BE]/30 flex items-center justify-center text-[#54C7BE] shrink-0">
+              <FolderGit2 size={22} />
+            </div>
+            <div>
+              <p className="!text-ivory text-[32px] font-bold font-heading">{loading ? '—' : projects.length}</p>
+              <p className="text-sm text-[#9AA7B5] font-body mt-0.5">Total Projects</p>
+            </div>
+          </div>
+
         </div>
 
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={fetchData} icon={<RefreshCw size={14} />}>
-            Refresh
-          </Button>
+        {/* Card 2: Migrations */}
+        <div className="rounded-2xl bg-[#151D2A] border border-[#2B3544] p-6 min-h-[140px] flex items-center justify-between shadow-md hover:border-[#54C7BE]/40 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#54C7BE]/15 border border-[#54C7BE]/30 flex items-center justify-center text-[#54C7BE] shrink-0">
+              <ArrowLeftRight size={22} />
+            </div>
+            <div>
+              <p className="!text-ivory text-[32px] font-bold font-heading">{loading ? '—' : history.length}</p>
+              <p className="text-sm text-[#9AA7B5] font-body mt-0.5">Migrations</p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Card 3: Successful */}
+        <div className="rounded-2xl bg-[#151D2A] border border-[#2B3544] p-6 min-h-[140px] flex items-center justify-between shadow-md hover:border-[#54C7BE]/40 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#54C7BE]/15 border border-[#54C7BE]/30 flex items-center justify-center text-[#54C7BE] shrink-0">
+              <CheckCircle2 size={22} />
+            </div>
+            <div>
+              <p className="!text-ivory text-[32px] font-bold font-heading">{loading ? '—' : history.filter(m => m.status === 'approved').length}</p>
+              <p className="text-sm text-[#9AA7B5] font-body mt-0.5">Successful</p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Card 4: Needs Review */}
+        <div className="rounded-2xl bg-[#151D2A] border border-[#2B3544] p-6 min-h-[140px] flex items-center justify-between shadow-md hover:border-[#54C7BE]/40 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#54C7BE]/15 border border-[#54C7BE]/30 flex items-center justify-center text-[#54C7BE] shrink-0">
+              <Clock size={22} />
+            </div>
+            <div>
+              <p className="!text-ivory text-[32px] font-bold font-heading">{loading ? '—' : history.filter(m => m.status === 'verified' || m.status === 'generated').length}</p>
+              <p className="text-sm text-[#9AA7B5] font-body mt-0.5">Needs Review</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Recent Projects Table Card - Image 9 */}
+      <div className="rounded-2xl bg-[#151D2A] border border-[#2B3544] shadow-xl overflow-hidden">
+        {/* Table Card Header */}
+        <div className="p-6 border-b border-[#2B3544] flex flex-wrap gap-4 items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <FileCode2 size={20} className="text-[#54C7BE]" />
+            <h2 className="text-lg font-bold font-heading text-[#F2F0EA]">
+              Recent Projects
+            </h2>
+          </div>
           <Link to="/projects">
-            <Button variant="primary" size="sm" icon={<Plus size={16} />}>
-              Import Project
+            <Button
+              variant="primary"
+              size="sm"
+              icon={<Plus size={15} />}
+              className="bg-[#C6B99A] text-[#090D14] hover:bg-[#DDD2BA] font-semibold"
+            >
+              New Project
             </Button>
           </Link>
         </div>
-      </div>
 
-      {error && (
-        <div className="p-4 rounded-xl bg-error/10 border border-error/30 text-error text-xs">
-          {error}
-        </div>
-      )}
-
-      {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="rounded-2xl bg-midnight-slate border border-border p-5 hover:border-teal/30 transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono uppercase tracking-wider text-secondary-text">Projects</span>
-            <div className="w-8 h-8 rounded-lg bg-teal/10 text-teal flex items-center justify-center">
-              <FolderGit2 size={16} />
-            </div>
-          </div>
-          <p className="text-3xl font-bold font-heading text-ivory mt-3">{totalProjects}</p>
-          <p className="text-xs text-secondary-text mt-1">Active codebases tracked</p>
-        </div>
-
-        <div className="rounded-2xl bg-midnight-slate border border-border p-5 hover:border-champagne/30 transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono uppercase tracking-wider text-secondary-text">Migrations</span>
-            <div className="w-8 h-8 rounded-lg bg-champagne/10 text-champagne flex items-center justify-center">
-              <GitBranch size={16} />
-            </div>
-          </div>
-          <p className="text-3xl font-bold font-heading text-ivory mt-3">{totalMigrations}</p>
-          <p className="text-xs text-secondary-text mt-1">Total migration jobs logged</p>
-        </div>
-
-        <div className="rounded-2xl bg-midnight-slate border border-border p-5 hover:border-success/30 transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono uppercase tracking-wider text-secondary-text">Verified & Approved</span>
-            <div className="w-8 h-8 rounded-lg bg-success/10 text-success flex items-center justify-center">
-              <CheckCircle2 size={16} />
-            </div>
-          </div>
-          <p className="text-3xl font-bold font-heading text-success mt-3">{approvedMigrations}</p>
-          <p className="text-xs text-secondary-text mt-1">Pytest-backed approvals</p>
-        </div>
-
-        <div className="rounded-2xl bg-midnight-slate border border-border p-5 hover:border-warning/30 transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono uppercase tracking-wider text-secondary-text">In Flight</span>
-            <div className="w-8 h-8 rounded-lg bg-warning/10 text-warning flex items-center justify-center">
-              <Sparkles size={16} />
-            </div>
-          </div>
-          <p className="text-3xl font-bold font-heading text-warning mt-3">{pendingMigrations}</p>
-          <p className="text-xs text-secondary-text mt-1">Pending AI review</p>
-        </div>
-      </div>
-
-      {/* Main Workspace Grid: Projects on Left, Activity on Right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Projects List (7 cols) */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold font-heading text-ivory">Active Repositories</h2>
-            <Link to="/projects" className="text-xs font-mono text-champagne hover:underline flex items-center gap-1">
-              View all <ArrowRight size={12} />
-            </Link>
-          </div>
-
-          {projects.length === 0 ? (
-            <div className="rounded-2xl bg-midnight-slate/60 border border-dashed border-border p-8 text-center">
-              <FolderGit2 className="mx-auto text-secondary-text mb-3" size={32} />
-              <p className="text-sm font-semibold text-ivory">No projects imported yet</p>
-              <p className="text-xs text-secondary-text mt-1 mb-4">
-                Import your Python codebase or sample project to start AST compatibility analysis.
-              </p>
-              <Link to="/projects">
-                <Button variant="primary" size="sm">Import Sample Project</Button>
-              </Link>
-            </div>
-          ) : (
-            <div className="space-y-3">
+        {/* Table */}
+        <div className="overflow-x-auto" tabIndex={0} aria-label="Scrollable records table">
+          <table className="w-full min-w-[760px] text-left font-body text-sm">
+            <thead className="bg-[#1D2735] border-b border-[#2B3544] text-[#9AA7B5] uppercase text-[11px] tracking-wider font-semibold select-none">
+              <tr>
+                <th className="py-4 px-6">Project Name</th>
+                <th className="py-4 px-6">Dependencies</th>
+                <th className="py-4 px-6">Last Migration</th>
+                <th className="py-4 px-6">Status</th>
+                <th className="py-4 px-6">Imported</th>
+                <th className="py-4 px-6 text-right"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#2B3544]/60">
+              {!projects.length && <tr><td colSpan={6} className="empty-state">{loading ? 'Loading projects…' : 'Import your first project to get started.'}</td></tr>}
               {projects.map((proj) => (
-                <div
+                <tr
                   key={proj.id}
                   onClick={() => navigate(`/projects/${proj.id}`)}
-                  className="rounded-xl bg-midnight-slate border border-border p-4 hover:border-teal/50 cursor-pointer transition-all flex items-center justify-between group"
+                  className="hover:bg-[#1D2735]/60 cursor-pointer transition-colors h-16"
                 >
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-10 h-10 rounded-lg bg-elevated border border-border flex items-center justify-center text-teal group-hover:scale-105 transition-transform">
-                      <FolderGit2 size={18} />
+                  <td className="py-4 px-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-[#090D14] border border-[#2B3544] flex items-center justify-center text-[#54C7BE] shrink-0">
+                        <FolderGit2 size={16} />
+                      </div>
+                      <div>
+                        <p className="text-[#F2F0EA] font-semibold text-sm">
+                          {proj.name}
+                        </p>
+                        <p className="text-[11px] text-[#9AA7B5] font-body mt-0.5">
+                          {proj.versionSub}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-sm font-bold font-heading text-ivory group-hover:text-teal transition-colors">
-                        {proj.name}
-                      </h3>
-                      <p className="text-xs font-mono text-secondary-text mt-0.5 truncate max-w-xs sm:max-w-md">
-                        {proj.source}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-elevated text-secondary-text border border-border">
-                      {proj.file_count} files
-                    </span>
-                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded uppercase font-semibold ${
-                      proj.status === 'analyzed'
-                        ? 'bg-success/15 text-success'
-                        : proj.status === 'analyzing'
-                        ? 'bg-warning/15 text-warning animate-pulse'
-                        : 'bg-teal/15 text-teal'
-                    }`}>
+                  </td>
+                  <td className="py-4 px-6 text-[#9AA7B5]">
+                    {proj.dependencies}
+                  </td>
+                  <td className="py-4 px-6 text-[#9AA7B5]">
+                    {proj.lastMigration}
+                  </td>
+                  <td className="py-4 px-6">
+                    <span
+                      className={`inline-flex items-center gap-1.5 text-[11px] font-body px-3 py-1 rounded-full font-medium ${
+                        proj.statusVariant === 'success'
+                          ? 'bg-[#49B994]/15 text-[#49B994] border border-[#49B994]/30'
+                          : proj.statusVariant === 'progress'
+                          ? 'bg-[#54C7BE]/15 text-[#54C7BE] border border-[#54C7BE]/30'
+                          : 'bg-[#D5A86B]/15 text-[#D5A86B] border border-[#D5A86B]/30'
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          proj.statusVariant === 'success'
+                            ? 'bg-[#49B994]'
+                            : proj.statusVariant === 'progress'
+                            ? 'bg-[#54C7BE]'
+                            : 'bg-[#D5A86B]'
+                        }`}
+                      />
                       {proj.status}
                     </span>
-                    <ArrowRight size={14} className="text-secondary-text group-hover:text-ivory" />
-                  </div>
-                </div>
+                  </td>
+                  <td className="py-4 px-6 text-[#9AA7B5]">
+                    {proj.updated}
+                  </td>
+                  <td className="py-4 px-6 text-right">
+                    <button
+                      type="button"
+                      aria-label="Open record"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/projects/${proj.id}`);
+                      }}
+                      className="p-1.5 text-[#9AA7B5] hover:text-[#F2F0EA] hover:bg-[#090D14] rounded-lg transition-colors"
+                    >
+                      <MoreVertical size={16} />
+                    </button>
+                  </td>
+                </tr>
               ))}
-            </div>
-          )}
-        </div>
-
-        {/* Recent Migrations / Activity Log (5 cols) */}
-        <div className="lg:col-span-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold font-heading text-ivory">Recent Migrations</h2>
-            <Link to="/history" className="text-xs font-mono text-champagne hover:underline flex items-center gap-1">
-              Audit log <ArrowRight size={12} />
-            </Link>
-          </div>
-
-          <div className="rounded-2xl bg-midnight-slate border border-border p-4 space-y-3">
-            {history.length === 0 ? (
-              <div className="text-center py-8 text-xs text-secondary-text">
-                No migrations performed yet. Start by analyzing a project.
-              </div>
-            ) : (
-              history.slice(0, 5).map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => navigate(`/migrations/${item.id}`)}
-                  className="p-3 rounded-xl bg-elevated/50 border border-border/60 hover:border-champagne/40 cursor-pointer transition-colors flex items-center justify-between"
-                >
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold font-mono text-ivory">
-                        {item.dependency_name}
-                      </span>
-                      <span className="text-[10px] font-mono text-secondary-text">
-                        {item.from_version} → {item.to_version}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-secondary-text mt-0.5">
-                      Project: {item.project_name}
-                    </p>
-                  </div>
-
-                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded uppercase font-semibold ${
-                    item.status === 'approved'
-                      ? 'bg-success/15 text-success'
-                      : item.status === 'verified'
-                      ? 'bg-teal/15 text-teal'
-                      : item.status === 'failed'
-                      ? 'bg-error/15 text-error'
-                      : 'bg-champagne/15 text-champagne'
-                  }`}>
-                    {item.status}
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   );
 }
-

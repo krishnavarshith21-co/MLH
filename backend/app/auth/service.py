@@ -1,6 +1,12 @@
 """Authentication service — password hashing and JWT token management."""
 
-from datetime import UTC, datetime, timedelta
+from __future__ import annotations
+
+from datetime import datetime, timedelta, timezone
+try:
+    from datetime import UTC
+except ImportError:
+    UTC = timezone.utc
 
 import bcrypt
 import jwt

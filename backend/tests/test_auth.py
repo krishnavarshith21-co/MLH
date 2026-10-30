@@ -1,5 +1,7 @@
 """Tests for JWT authentication and bcrypt password hashing."""
 
+from __future__ import annotations
+
 from app.auth.service import (
     create_access_token,
     decode_access_token,

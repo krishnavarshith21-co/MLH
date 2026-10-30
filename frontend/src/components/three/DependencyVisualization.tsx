@@ -1,51 +1,46 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, OrbitControls } from '@react-three/drei';
+import { Float, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
-interface NodeData {
+export interface GraphNode {
   id: string;
-  name: string;
-  version: string;
+  name?: string;
+  label: string;
   position: [number, number, number];
-  status: 'healthy' | 'outdated' | 'migrating' | 'verified';
-  size: number;
+  color: string;
+  radius: number;
+  isCenter?: boolean;
 }
 
-const NODES: NodeData[] = [
-  { id: 'core', name: 'App Core', version: 'v1.0', position: [0, 0, 0], status: 'verified', size: 0.9 },
-  { id: 'pandas', name: 'pandas', version: '1.5.3 → 2.0', position: [2.2, 0.8, -0.5], status: 'migrating', size: 0.65 },
-  { id: 'numpy', name: 'numpy', version: '1.24.0', position: [-2.0, 1.2, 0.8], status: 'healthy', size: 0.55 },
-  { id: 'pytest', name: 'pytest', version: '7.4.0', position: [1.8, -1.4, 0.6], status: 'healthy', size: 0.5 },
-  { id: 'fastapi', name: 'fastapi', version: '0.115', position: [-1.6, -1.2, -0.8], status: 'verified', size: 0.55 },
-  { id: 'sql', name: 'sqlalchemy', version: '2.0.0', position: [0.2, 2.3, -0.6], status: 'healthy', size: 0.5 },
-  { id: 'qwen', name: 'qwen2.5-coder', version: '7B-Instruct', position: [0.0, -2.2, -0.4], status: 'verified', size: 0.6 },
+const GRAPH_NODES: GraphNode[] = [
+  {id:'center', label:'VERYNTH', position:[0,0,0.2], color:'#C6B99A', radius:0.28, isCenter:true},
+  ...['pandas','numpy','fastapi','requests','matplotlib','scikit-learn'].map((name,i) => ({
+    id:name, label:name, position:[Math.cos(i*Math.PI/3)*1.45,Math.sin(i*Math.PI/3)*1.4,0] as [number,number,number], color:'#54C7BE', radius:0.13,
+  })),
 ];
+const GRAPH_EDGES: [string,string][] = GRAPH_NODES.slice(1).flatMap((n,i) => [[n.id,'center'],[n.id,GRAPH_NODES[1+(i+1)%6].id]] as [string,string][]);
 
-function NodeMesh({ node, isHovered, onHover }: { node: NodeData; isHovered: boolean; onHover: (hover: boolean) => void }) {
+function NodeSphere({
+  node,
+  isHovered,
+  onHover,
+}: {
+  node: GraphNode;
+  isHovered: boolean;
+  onHover: (hovered: boolean) => void;
+}) {
   const meshRef = useRef<THREE.Mesh>(null);
-
-  // Status colors matching our design palette:
-  // Teal: #54C7BE, Champagne: #C6B99A, Warning: #D5A86B, Success: #49B994
-  const color = useMemo(() => {
-    switch (node.status) {
-      case 'migrating':
-        return '#C6B99A'; // Champagne Titanium
-      case 'outdated':
-        return '#D5A86B'; // Warning Gold
-      case 'verified':
-        return '#49B994'; // Success Green
-      case 'healthy':
-      default:
-        return '#54C7BE'; // Glacier Teal
-    }
-  }, [node.status]);
 
   useFrame((state) => {
     if (!meshRef.current) return;
-    if (node.status === 'migrating') {
-      const pulse = Math.sin(state.clock.elapsedTime * 3) * 0.15 + 1;
-      meshRef.current.scale.setScalar(node.size * pulse * (isHovered ? 1.2 : 1));
+    if (node.isCenter) {
+      const pulse = 1 + Math.sin(state.clock.elapsedTime * 2.0) * 0.04;
+      meshRef.current.scale.setScalar(pulse * (isHovered ? 1.2 : 1.0));
+    } else if (isHovered) {
+      meshRef.current.scale.setScalar(1.2);
+    } else {
+      meshRef.current.scale.setScalar(1.0);
     }
   });
 
@@ -53,61 +48,107 @@ function NodeMesh({ node, isHovered, onHover }: { node: NodeData; isHovered: boo
     <group position={node.position}>
       <mesh
         ref={meshRef}
-        scale={node.size * (isHovered ? 1.2 : 1)}
         onPointerOver={(e) => {
           e.stopPropagation();
           onHover(true);
         }}
         onPointerOut={() => onHover(false)}
       >
-        <sphereGeometry args={[1, 32, 32]} />
+        <sphereGeometry args={[node.radius, 32, 32]} />
         <meshStandardMaterial
-          color={color}
-          roughness={0.2}
-          metalness={0.8}
-          emissive={color}
-          emissiveIntensity={isHovered ? 0.6 : 0.25}
+          color={node.color}
+          roughness={node.isCenter ? 0.35 : 0.25}
+          metalness={0.85}
+          emissive={node.color}
+          emissiveIntensity={node.isCenter ? 0.5 : 0.4}
         />
       </mesh>
 
-      {/* Halo ring for migrating or core nodes */}
-      {(node.status === 'migrating' || node.id === 'core') && (
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[node.size * 1.3, node.size * 1.45, 32]} />
-          <meshBasicMaterial color={color} transparent opacity={0.4} side={THREE.DoubleSide} />
-        </mesh>
-      )}
+      {/* Floating text label if node has a label */}
+      {node.isCenter ? (
+        <Html
+          position={[0, 0, 0]}
+          center
+          distanceFactor={6}
+          style={{
+            pointerEvents: 'none',
+            userSelect: 'none',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <div className="font-heading font-black text-xs text-[#090D14] select-none tracking-tighter">
+            V
+          </div>
+        </Html>
+      ) : node.label ? (
+        <Html
+          position={[0, node.radius + 0.15, 0]}
+          center
+          distanceFactor={6}
+          style={{
+            pointerEvents: 'none',
+            userSelect: 'none',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <div className="text-[11px] font-mono text-[#F2F0EA] opacity-90 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+            {node.label}
+          </div>
+        </Html>
+      ) : null}
     </group>
   );
 }
 
-function RelationshipLines({ activeNode }: { activeNode: string | null }) {
-  const lines = useMemo(() => {
-    const corePos = new THREE.Vector3(0, 0, 0);
-    return NODES.filter((n) => n.id !== 'core').map((node) => {
-      const targetPos = new THREE.Vector3(...node.position);
-      const points = [corePos, targetPos];
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      return { id: node.id, geometry, status: node.status };
-    });
+function NetworkLines({ activeId }: { activeId: string | null }) {
+  const nodeMap = useMemo(() => {
+    const map = new Map<string, GraphNode>();
+    GRAPH_NODES.forEach((n) => map.set(n.id, n));
+    return map;
   }, []);
+
+  const lines = useMemo(() => {
+    return GRAPH_EDGES.map(([fromId, toId]) => {
+      const fromNode = nodeMap.get(fromId);
+      const toNode = nodeMap.get(toId);
+      if (!fromNode || !toNode) return null;
+
+      const p1 = new THREE.Vector3(...fromNode.position);
+      const p2 = new THREE.Vector3(...toNode.position);
+      const geometry = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+
+      return {
+        key: `${fromId}-${toId}`,
+        fromId,
+        toId,
+        geometry,
+        isCenterEdge: fromNode.isCenter || toNode.isCenter,
+      };
+    }).filter(Boolean) as {
+      key: string;
+      fromId: string;
+      toId: string;
+      geometry: THREE.BufferGeometry;
+      isCenterEdge: boolean;
+    }[];
+  }, [nodeMap]);
 
   return (
     <group>
-      {lines.map((l) => {
-        const isHighlighted = activeNode === l.id;
-        const color = l.status === 'migrating' ? '#C6B99A' : '#54C7BE';
+      {lines.map((line) => {
+        const isHighlighted = activeId === line.fromId || activeId === line.toId;
+        const color = line.isCenterEdge ? '#8EA39E' : '#3E7674';
         return (
           <primitive
-            key={l.id}
+            key={line.key}
             object={
               new THREE.Line(
-                l.geometry,
+                line.geometry,
                 new THREE.LineBasicMaterial({
                   color,
                   transparent: true,
-                  opacity: isHighlighted ? 0.9 : 0.35,
-                  linewidth: isHighlighted ? 2 : 1,
+                  opacity: isHighlighted ? 0.85 : line.isCenterEdge ? 0.4 : 0.25,
+                  linewidth: 1,
                 })
               )
             }
@@ -118,22 +159,28 @@ function RelationshipLines({ activeNode }: { activeNode: string | null }) {
   );
 }
 
-function Scene({ hoveredId, setHoveredId }: { hoveredId: string | null; setHoveredId: (id: string | null) => void }) {
+function SceneGraph({
+  hoveredId,
+  setHoveredId,
+}: {
+  hoveredId: string | null;
+  setHoveredId: (id: string | null) => void;
+}) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y = state.clock.elapsedTime * 0.12;
-      groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.08) * 0.1;
+      groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.15) * 0.08;
+      groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.03) * 0.04;
     }
   });
 
   return (
-    <Float speed={1.2} rotationIntensity={0.3} floatIntensity={0.4}>
+    <Float speed={0.8} rotationIntensity={0.08} floatIntensity={0.15}>
       <group ref={groupRef}>
-        <RelationshipLines activeNode={hoveredId} />
-        {NODES.map((node) => (
-          <NodeMesh
+        <NetworkLines activeId={hoveredId} />
+        {GRAPH_NODES.map((node) => (
+          <NodeSphere
             key={node.id}
             node={node}
             isHovered={hoveredId === node.id}
@@ -147,9 +194,15 @@ function Scene({ hoveredId, setHoveredId }: { hoveredId: string | null; setHover
 
 export function DependencyVisualization() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
   const [hasWebGL, setHasWebGL] = useState(true);
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setIsReducedMotion(mediaQuery.matches);
+    const handleChange = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handleChange);
+
     try {
       const canvas = document.createElement('canvas');
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -157,73 +210,63 @@ export function DependencyVisualization() {
     } catch {
       setHasWebGL(false);
     }
+
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
-  const activeNodeData = useMemo(() => {
-    return NODES.find((n) => n.id === hoveredId) || NODES[1]; // default to pandas
-  }, [hoveredId]);
-
-  if (!hasWebGL) {
-    return (
-      <div className="w-full h-full min-h-[380px] rounded-2xl bg-midnight-slate/60 border border-border flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-16 h-16 rounded-full bg-teal/20 border border-teal flex items-center justify-center mb-4">
-          <div className="w-8 h-8 rounded-full bg-teal animate-pulse" />
-        </div>
-        <h3 className="font-heading font-bold text-lg text-ivory">Dependency Graph Active</h3>
-        <p className="text-sm text-secondary-text mt-1 max-w-sm">
-          Interactive WebGL preview disabled. 7 packages verified, pandas 1.5.3 migration in progress.
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="relative w-full h-[400px] sm:h-[480px] lg:h-[540px] rounded-2xl bg-gradient-to-b from-midnight-slate/40 to-obsidian/80 border border-border/80 overflow-hidden shadow-2xl backdrop-blur-md">
-      {/* 3D Canvas */}
-      <Canvas camera={{ position: [0, 0, 5.5], fov: 48 }} gl={{ antialias: true, alpha: true }}>
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[10, 10, 10]} intensity={1.2} color="#F2F0EA" />
-        <pointLight position={[-10, -10, -5]} intensity={0.8} color="#54C7BE" />
-        <pointLight position={[0, 5, 5]} intensity={0.5} color="#C6B99A" />
-        <Scene hoveredId={hoveredId} setHoveredId={setHoveredId} />
-        <OrbitControls enableZoom={false} enablePan={false} autoRotate={false} />
-      </Canvas>
-
-      {/* Floating Status Badge / HUD */}
-      <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-        <div className="px-3 py-1.5 rounded-lg bg-midnight-slate/90 border border-border/80 backdrop-blur-md shadow-lg pointer-events-auto">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-champagne animate-ping" />
-            <span className="text-xs font-mono font-medium text-ivory">
-              {activeNodeData.name} ({activeNodeData.version})
-            </span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded uppercase font-mono tracking-wider bg-elevated text-champagne border border-champagne/30">
-              {activeNodeData.status}
-            </span>
-          </div>
-        </div>
-
-        <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-md bg-elevated/80 border border-border text-[11px] font-mono text-secondary-text">
-          <span>Drag to orbit</span>
-        </div>
+    <div className="relative w-full h-[400px] sm:h-[460px] lg:h-[500px] rounded-2xl bg-[#0B1018] border border-[#2B3544] overflow-hidden shadow-2xl flex flex-col justify-between">
+      {/* Background technical orbit rings matching Image 1 */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
+        <div className="w-[500px] h-[500px] rounded-full border border-[#54C7BE]/5" />
+        <div className="w-[380px] h-[380px] rounded-full border border-[#54C7BE]/8 absolute" />
+        <div className="w-[260px] h-[260px] rounded-full border border-[#C6B99A]/10 absolute" />
+        <div className="w-[140px] h-[140px] rounded-full border border-[#54C7BE]/10 absolute" />
       </div>
 
-      {/* Bottom Node Legend */}
-      <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs font-mono text-secondary-text pointer-events-none">
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-teal" />
+      {/* TOP-RIGHT LEGEND: Exact to Image 1 in reference sheet */}
+      <div className="absolute top-4 left-4 z-20 px-3.5 py-2 rounded-xl bg-[#090D14]/85 border border-[#2B3544]/80 backdrop-blur-md flex flex-row gap-3 text-[10px] sm:text-[11px] font-mono text-[#9AA7B5] shadow-lg">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#54C7BE]" />
           <span>Healthy</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-champagne" />
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#C6B99A]" />
           <span>Migrating</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-success" />
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#49B994]" />
           <span>Verified</span>
         </div>
+      </div>
+
+      {/* 3D Scene Viewport */}
+      <div className="relative flex-1 w-full h-full min-h-0">
+        {!isReducedMotion && hasWebGL ? (
+          <Canvas
+            camera={{ position: [0, 0, 6.8], fov: 42 }}
+            gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+            dpr={[1, 1.5]}
+          >
+            <ambientLight intensity={1.1} />
+            <directionalLight position={[5, 8, 8]} intensity={1.6} color="#F2F0EA" />
+            <pointLight position={[0, -0.4, 2]} intensity={1.5} color="#C6B99A" />
+            <pointLight position={[-2, 1, 1]} intensity={1.0} color="#54C7BE" />
+            <SceneGraph hoveredId={hoveredId} setHoveredId={setHoveredId} />
+          </Canvas>
+        ) : (
+          <div className="w-full h-full flex flex-wrap items-center justify-center gap-3 p-8">
+            {GRAPH_NODES.filter((n) => n.label).map((n) => (
+              <span
+                key={n.id}
+                className="px-3 py-1.5 rounded-lg bg-[#151D2A] border border-[#2B3544] text-xs font-mono text-[#54C7BE]"
+              >
+                {n.label}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
-

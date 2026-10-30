@@ -1,0 +1,37 @@
+[
+  {
+    "width": 1920,
+    "collisions": [],
+    "labels": 6
+  },
+  {
+    "width": 1440,
+    "collisions": [],
+    "labels": 6
+  },
+  {
+    "width": 1280,
+    "collisions": [],
+    "labels": 6
+  },
+  {
+    "width": 1024,
+    "collisions": [],
+    "labels": 6
+  },
+  {
+    "width": 768,
+    "collisions": [],
+    "labels": 6
+  },
+  {
+    "width": 390,
+    "collisions": [],
+    "labels": 6
+  },
+  {
+    "width": 360,
+    "collisions": [],
+    "labels": 6
+  }
+]

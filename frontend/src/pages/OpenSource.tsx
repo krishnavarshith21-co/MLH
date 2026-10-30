@@ -1,68 +1,95 @@
 import React from 'react';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
-import { TechSection } from '../components/landing/TechSection';
-import { Github, Award, Shield, Cpu, BookOpen, ExternalLink } from 'lucide-react';
+import { Cpu, Terminal, Zap, Code2, FlaskConical, Box } from 'lucide-react';
+
+const technologies = [
+  {
+    name: 'Qwen2.5-Coder-7B',
+    desc: 'Open-weight model for code understanding.',
+    license: 'Apache 2.0',
+    icon: Cpu,
+  },
+  {
+    name: 'Python 3.12 + AST',
+    desc: 'Static analysis to find deprecated APIs.',
+    license: 'PSF License',
+    icon: Terminal,
+  },
+  {
+    name: 'FastAPI + SQLAlchemy',
+    desc: 'Robust backend with SQLite persistence.',
+    license: 'MIT License',
+    icon: Zap,
+  },
+  {
+    name: 'React + TypeScript',
+    desc: 'Modern, responsive frontend with Three.js visualizations.',
+    license: 'MIT / Apache 2.0',
+    icon: Code2,
+  },
+  {
+    name: 'Pytest Sandbox',
+    desc: 'Isolated test execution with timeout and output capture.',
+    license: 'MIT License',
+    icon: FlaskConical,
+  },
+  {
+    name: 'Ollama',
+    desc: 'Local inference runtime with low latency.',
+    license: 'MIT License',
+    icon: Box,
+  },
+];
 
 export function OpenSourcePage() {
   return (
-    <div className="min-h-screen bg-obsidian text-ivory flex flex-col">
+    <div className="min-h-screen bg-[#090D14] text-[#F2F0EA] flex flex-col">
       <Navbar />
-      <main className="flex-1 pt-28 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mb-12">
-            <span className="px-3 py-1 rounded-full bg-teal/10 border border-teal/20 text-xs font-mono text-teal uppercase">
-              Hackathon Track 1 Compliance
-            </span>
-            <h1 className="text-4xl sm:text-5xl font-bold font-heading text-ivory mt-4">
-              Open-Source & Open-Weight Foundations
+      <main className="flex-1 pt-20 pb-28">
+        <div className="container-enterprise">
+          {/* Eyebrow and Header matching Image 1 & 7 */}
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#151D2A] border border-[#2B3544] text-[10px] sm:text-[11px] font-body tracking-widest text-[#54C7BE] uppercase mb-4 shadow-sm">
+              <span>• BUILT ON OPEN SOURCE •</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-heading text-[#F2F0EA] tracking-tight">
+              Transparent. Open Source. Built for Real Developers.
             </h1>
-            <p className="text-lg text-secondary-text mt-4">
-              VERYNTH is built for <strong>SMRU Hack Day Hyderabad 2026</strong> under the <strong>Best Open-Source / Open-Weight AI Product</strong> track.
+            <p className="text-base sm:text-lg text-[#9AA7B5] mt-4 leading-relaxed font-body">
+              We build on trusted open-source tools to deliver transparent, reliable, and verifiable results.
             </p>
           </div>
 
-          {/* Hackathon Credentials Card */}
-          <div className="rounded-2xl bg-midnight-slate border border-champagne/30 p-8 mb-16 shadow-xl">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
-              <div className="p-4 rounded-xl bg-elevated/60 border border-border">
-                <span className="text-secondary-text block mb-1 uppercase tracking-wider">Event & Track</span>
-                <p className="text-base font-bold font-heading text-champagne">SMRU Hack Day 2026</p>
-                <p className="text-ivory mt-1">Track 1: Open-Weight AI Product</p>
-              </div>
+          {/* 6 Technology Cards in 3x2 Grid matching Image 1 & 7 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {technologies.map((tech) => {
+              const Icon = tech.icon;
+              return (
+                <div
+                  key={tech.name}
+                  className="rounded-2xl bg-[#151D2A] border border-[#2B3544] p-7 flex flex-col justify-between hover:border-[#54C7BE]/50 hover:bg-[#151D2A]/90 transition-all duration-300 shadow-md h-full group"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-11 h-11 rounded-xl bg-[#1D2735] border border-[#2B3544] flex items-center justify-center text-[#54C7BE] group-hover:scale-105 transition-transform duration-200">
+                        <Icon size={20} />
+                      </div>
+                      <span className="text-[11px] font-body px-2.5 py-1 rounded-md bg-[#090D14] text-[#9AA7B5] border border-[#2B3544]">
+                        {tech.license}
+                      </span>
+                    </div>
 
-              <div className="p-4 rounded-xl bg-elevated/60 border border-border">
-                <span className="text-secondary-text block mb-1 uppercase tracking-wider">AI Foundation Model</span>
-                <p className="text-base font-bold font-heading text-teal">Qwen2.5-Coder-7B</p>
-                <p className="text-ivory mt-1">License: Apache 2.0 (Open-Weight)</p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-elevated/60 border border-border">
-                <span className="text-secondary-text block mb-1 uppercase tracking-wider">Application License</span>
-                <p className="text-base font-bold font-heading text-success">MIT License</p>
-                <p className="text-ivory mt-1">Full Source Freedom</p>
-              </div>
-            </div>
-          </div>
-
-          <TechSection />
-
-          {/* Transparent Model Disclosures */}
-          <div className="mt-16 rounded-2xl bg-midnight-slate border border-border p-8">
-            <h3 className="text-xl font-bold font-heading text-ivory mb-4">
-              AI Model Specifications & Verifiability
-            </h3>
-            <div className="space-y-4 text-sm text-secondary-text leading-relaxed">
-              <p>
-                <strong className="text-ivory">Model Name:</strong> Qwen2.5-Coder-7B-Instruct (Alibaba Cloud / Qwen Team).
-              </p>
-              <p>
-                <strong className="text-ivory">License:</strong> Apache 2.0 license allowing commercial and non-commercial development, modification, and self-hosting.
-              </p>
-              <p>
-                <strong className="text-ivory">No Fabricated Outputs:</strong> VERYNTH uses real subprocess executions for verification. If the local Ollama inference service is offline during demonstration, the platform transparently falls back to deterministic AST rewrite rules with clear labels rather than pretending a model generated the response.
-              </p>
-            </div>
+                    <h3 className="text-lg font-bold font-heading text-[#F2F0EA] mb-2">
+                      {tech.name}
+                    </h3>
+                    <p className="text-sm text-[#9AA7B5] leading-relaxed font-body">
+                      {tech.desc}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </main>
@@ -70,4 +97,3 @@ export function OpenSourcePage() {
     </div>
   );
 }
-

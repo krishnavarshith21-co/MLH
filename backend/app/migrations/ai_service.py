@@ -1,5 +1,7 @@
 """AI service — Qwen2.5-Coder integration via Ollama HTTP API."""
 
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass
 

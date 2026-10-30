@@ -1,5 +1,7 @@
 """Main FastAPI application entry point for VERYNTH."""
 
+from __future__ import annotations
+
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI

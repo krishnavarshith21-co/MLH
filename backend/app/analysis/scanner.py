@@ -1,5 +1,7 @@
 """Dependency scanner — parse requirements.txt and query PyPI for latest versions."""
 
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass
 

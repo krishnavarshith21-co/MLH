@@ -1,99 +1,88 @@
 import React from 'react';
-import { Cpu, Terminal, Layers, Code, TestTube, Container, GitFork } from 'lucide-react';
+import { Cpu, Terminal, Zap, Code2, FlaskConical, Box } from 'lucide-react';
 
 const technologies = [
   {
-    name: 'Qwen2.5-Coder-7B-Instruct',
-    category: 'AI Engine',
-    desc: 'Open-weight foundation model with code synthesis capabilities.',
+    name: 'Qwen2.5-Coder-7B',
+    desc: 'Open-weight model for code understanding.',
     license: 'Apache 2.0',
     icon: Cpu,
-    highlight: true,
   },
   {
     name: 'Python 3.12 + AST',
-    category: 'Static Analysis',
-    desc: 'Syntax tree parsing to pinpoint deprecated API attributes.',
+    desc: 'Static analysis to find deprecated APIs.',
     license: 'PSF License',
     icon: Terminal,
   },
   {
     name: 'FastAPI + SQLAlchemy',
-    category: 'Backend Architecture',
-    desc: 'Asynchronous REST APIs with SQLite transactional persistence.',
+    desc: 'Robust backend with SQLite persistence.',
     license: 'MIT License',
-    icon: Layers,
+    icon: Zap,
   },
   {
-    name: 'React 19 + TypeScript',
-    category: 'Frontend & 3D',
-    desc: 'Component architecture with React Three Fiber dependency graphs.',
-    license: 'MIT License',
-    icon: Code,
+    name: 'React + TypeScript',
+    desc: 'Modern, responsive frontend with Three.js visualizations.',
+    license: 'MIT / Apache 2.0',
+    icon: Code2,
   },
   {
-    name: 'Pytest Subprocess Sandbox',
-    category: 'Verification Runner',
+    name: 'Pytest Sandbox',
     desc: 'Isolated test execution with timeout and output capture.',
     license: 'MIT License',
-    icon: TestTube,
+    icon: FlaskConical,
   },
   {
-    name: 'Ollama Inference Runtime',
-    category: 'Model Serving',
-    desc: 'Local Apple Silicon / CUDA inference endpoint with low latency.',
+    name: 'Ollama',
+    desc: 'Local inference runtime with low latency.',
     license: 'MIT License',
-    icon: Container,
+    icon: Box,
   },
 ];
 
 export function TechSection() {
   return (
-    <section className="py-24 bg-midnight-slate/30 border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal/10 border border-teal/20 text-xs font-mono text-teal uppercase mb-3">
-            Open-Source Architecture
+    <section id="open-source" className="py-24 lg:py-24 bg-[#090D14] border-b border-[#2B3544]">
+      <div className="container-enterprise">
+        {/* Eyebrow and Heading matching Image 1 & 7 */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#151D2A] border border-[#2B3544] text-[10px] sm:text-[11px] font-body tracking-widest text-[#54C7BE] uppercase mb-4 shadow-sm">
+            <span>• BUILT ON OPEN SOURCE •</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold font-heading text-ivory tracking-tight">
-            Built on Open Standards
+          <h2 className="text-3xl sm:text-4xl md:text-[38px] font-extrabold font-heading text-[#F2F0EA] tracking-tight">
+            Transparent. Open Source. Built for Real Developers.
           </h2>
-          <p className="mt-3 text-secondary-text text-sm sm:text-base">
-            Engineered exclusively with transparent, open-weight tooling and verifiable execution.
+          <p className="text-base sm:text-lg text-[#9AA7B5] mt-4 leading-relaxed font-body">
+            We build on trusted open-source tools to deliver transparent, reliable, and verifiable results.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 6 Technology Cards in 3x2 Grid matching Image 1 & 7 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {technologies.map((tech) => {
             const Icon = tech.icon;
             return (
               <div
                 key={tech.name}
-                className={`rounded-2xl p-6 border transition-all ${
-                  tech.highlight
-                    ? 'bg-elevated/90 border-teal/40 shadow-lg shadow-teal/5'
-                    : 'bg-midnight-slate border-border hover:border-border/80'
-                }`}
+                className="rounded-2xl bg-[#151D2A] border border-[#2B3544] p-7 flex flex-col justify-between hover:border-[#54C7BE]/50 hover:bg-[#151D2A]/90 transition-all duration-300 shadow-md h-full group"
               >
-                <div className="flex items-center justify-between mb-4">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                    tech.highlight ? 'bg-teal/20 text-teal' : 'bg-elevated text-secondary-text'
-                  }`}>
-                    <Icon size={20} />
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="w-11 h-11 rounded-xl bg-[#1D2735] border border-[#2B3544] flex items-center justify-center text-[#54C7BE] group-hover:scale-105 transition-transform duration-200">
+                      <Icon size={20} />
+                    </div>
+                    <span className="text-[11px] font-body px-2.5 py-1 rounded-md bg-[#090D14] text-[#9AA7B5] border border-[#2B3544]">
+                      {tech.license}
+                    </span>
                   </div>
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-obsidian text-champagne border border-border">
-                    {tech.license}
-                  </span>
+
+                  <h3 className="text-lg font-bold font-heading text-[#F2F0EA] mb-2">
+                    {tech.name}
+                  </h3>
+                  <p className="text-sm text-[#9AA7B5] leading-relaxed font-body">
+                    {tech.desc}
+                  </p>
                 </div>
-                <p className="text-xs font-mono uppercase tracking-wider text-teal mb-1">
-                  {tech.category}
-                </p>
-                <h3 className="text-base font-bold font-heading text-ivory">
-                  {tech.name}
-                </h3>
-                <p className="text-xs text-secondary-text mt-2 leading-relaxed">
-                  {tech.desc}
-                </p>
               </div>
             );
           })}
@@ -102,4 +91,3 @@ export function TechSection() {
     </section>
   );
 }
-

@@ -1,5 +1,7 @@
 """Tests for verification runner output parsing."""
 
+from __future__ import annotations
+
 from app.verification.runner import _parse_pytest_output
 
 
