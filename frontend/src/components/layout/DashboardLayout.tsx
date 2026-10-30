@@ -28,7 +28,9 @@ export function DashboardLayout() {
           if (active) useAuthStore.setState({ user: r.data });
         })
         .catch((e) => {
-          if (active && e.message === 'Unauthorized') logout();
+          if (active && (e.status === 401 || e.message === 'Unauthorized' || e.message === 'User not found' || e.message === 'Invalid or expired token')) {
+            logout();
+          }
         });
 
       api.get<any>('/demo/ai-status')

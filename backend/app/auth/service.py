@@ -6,7 +6,7 @@ from datetime import UTC, datetime, timedelta
 
 import bcrypt
 import jwt
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
@@ -16,14 +16,20 @@ settings = get_settings()
 
 
 def hash_password(password: str) -> str:
-    """Hash a password using bcrypt."""
-    salt = bcrypt.gensalt()
-    return bcrypt.hashpw(password.encode("utf-8"), salt).decode("utf-8")
+    """Hash a password securely using bcrypt with 72-byte safe boundary."""
+    pw_bytes = password.encode("utf-8")[:72]
+    salt = bcrypt.gensalt(rounds=12)
+    return bcrypt.hashpw(pw_bytes, salt).decode("utf-8")
 
 
 def verify_password(password: str, password_hash: str) -> bool:
-    """Verify a password against its bcrypt hash."""
-    return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("utf-8"))
+    """Verify a password against its bcrypt hash safely."""
+    try:
+        pw_bytes = password.encode("utf-8")[:72]
+        hash_bytes = password_hash.encode("utf-8")
+        return bcrypt.checkpw(pw_bytes, hash_bytes)
+    except Exception:
+        return False
 
 
 def create_access_token(user_id: str) -> str:
@@ -48,8 +54,13 @@ def decode_access_token(token: str) -> dict | None:
 
 
 async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
-    """Look up a user by email address."""
-    result = await db.execute(select(User).where(User.email == email))
+    """Look up a user by email address (case-insensitive and trimmed)."""
+    if not email:
+        return None
+    norm_email = email.strip().lower()
+    result = await db.execute(
+        select(User).where(func.lower(User.email) == norm_email)
+    )
     return result.scalar_one_or_none()
 
 
@@ -59,14 +70,27 @@ async def get_user_by_id(db: AsyncSession, user_id: str) -> User | None:
     return result.scalar_one_or_none()
 
 
-async def create_user(db: AsyncSession, name: str, email: str, password: str) -> User:
-    """Create a new user with hashed password."""
+async def create_user(
+    db: AsyncSession,
+    name: str,
+    email: str,
+    password: str,
+    role: str = "Developer",
+    account_type: str = "Standard",
+    is_demo: bool = False,
+) -> User:
+    """Create and persist a new user with hashed password and normalized email."""
+    norm_email = email.strip().lower()
+    norm_name = name.strip()
     user = User(
-        name=name,
-        email=email,
+        name=norm_name,
+        email=norm_email,
         password_hash=hash_password(password),
+        role=role,
+        account_type=account_type,
+        is_demo=is_demo,
     )
     db.add(user)
-    await db.flush()
+    await db.commit()
     await db.refresh(user)
     return user

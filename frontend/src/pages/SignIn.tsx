@@ -31,7 +31,7 @@ export function SignInPage() {
     setLoading(true);
     try {
       sessionStorage.setItem('verynth_remember', String(rememberMe));
-      await login(email, password);
+      await login(email.trim(), password);
       navigate(from, { replace: true });
     } catch (err: any) {
       setError(err.message || 'Invalid email or password.');

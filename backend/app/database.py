@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
@@ -9,15 +10,24 @@ from app.config import get_settings
 
 settings = get_settings()
 
-db_url = settings.DATABASE_URL
-if db_url.startswith("sqlite:///"):
-    db_url = db_url.replace("sqlite:///", "sqlite+aiosqlite:///", 1)
+db_url = settings.resolved_database_url
 
 engine = create_async_engine(
     db_url,
     echo=False,
-    connect_args={"check_same_thread": False},
+    connect_args={"check_same_thread": False, "timeout": 30},
 )
+
+
+@event.listens_for(engine.sync_engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    """Enforce WAL mode, 30s busy timeout, and normal synchronous writes for high concurrency."""
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA journal_mode=WAL")
+    cursor.execute("PRAGMA busy_timeout=30000")
+    cursor.execute("PRAGMA synchronous=NORMAL")
+    cursor.close()
+
 
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
@@ -35,6 +45,8 @@ async def get_db() -> AsyncSession:
         except Exception:
             await session.rollback()
             raise
+        finally:
+            await session.close()
 
 
 async def init_db() -> None:

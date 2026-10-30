@@ -7,8 +7,38 @@ if (initialPresentation) {
   document.documentElement.classList.add('presentation-mode');
 }
 
+function getStoredUser(): any | null {
+  try {
+    const raw = localStorage.getItem('verynth_user') || sessionStorage.getItem('verynth_user');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function persistSession(token: string, user: any, remember: boolean = true) {
+  localStorage.removeItem('verynth_token');
+  localStorage.removeItem('verynth_user');
+  sessionStorage.removeItem('verynth_token');
+  sessionStorage.removeItem('verynth_user');
+
+  const storage = remember ? localStorage : sessionStorage;
+  storage.setItem('verynth_token', token);
+  if (user) {
+    storage.setItem('verynth_user', JSON.stringify(user));
+  }
+}
+
+function clearSession() {
+  localStorage.removeItem('verynth_token');
+  localStorage.removeItem('verynth_user');
+  sessionStorage.removeItem('verynth_token');
+  sessionStorage.removeItem('verynth_user');
+  sessionStorage.removeItem('verynth_remember');
+}
+
 export const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
+  user: getStoredUser(),
   token: localStorage.getItem('verynth_token') || sessionStorage.getItem('verynth_token'),
   isAuthenticated: !!(localStorage.getItem('verynth_token') || sessionStorage.getItem('verynth_token')),
   isLoading: false,
@@ -28,10 +58,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   login: async (email, password) => {
     set({ isLoading: true });
     try {
-      const { data } = await api.post<{ token: string; user: any }>('/auth/signin', { email, password });
-      localStorage.removeItem('verynth_token');
-      sessionStorage.removeItem('verynth_token');
-      (sessionStorage.getItem('verynth_remember') === 'false' ? sessionStorage : localStorage).setItem('verynth_token', data.token);
+      const cleanEmail = email.trim().toLowerCase();
+      const remember = sessionStorage.getItem('verynth_remember') !== 'false';
+      const { data } = await api.post<{ token: string; user: any }>('/auth/signin', { email: cleanEmail, password });
+      persistSession(data.token, data.user, remember);
       set({ token: data.token, user: data.user, isAuthenticated: true });
     } finally {
       set({ isLoading: false });
@@ -41,8 +71,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signup: async (name, email, password) => {
     set({ isLoading: true });
     try {
-      const { data } = await api.post<{ token: string; user: any }>('/auth/signup', { name, email, password });
-      localStorage.setItem('verynth_token', data.token);
+      const cleanEmail = email.trim().toLowerCase();
+      const cleanName = name.trim();
+      const { data } = await api.post<{ token: string; user: any }>('/auth/signup', { name: cleanName, email: cleanEmail, password });
+      persistSession(data.token, data.user, true);
       set({ token: data.token, user: data.user, isAuthenticated: true });
     } finally {
       set({ isLoading: false });
@@ -53,7 +85,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoading: true });
     try {
       const { data } = await api.post<{ token: string; user: any }>('/demo/session');
-      localStorage.setItem('verynth_token', data.token);
+      persistSession(data.token, data.user, true);
       set({ token: data.token, user: data.user, isAuthenticated: true });
     } finally {
       set({ isLoading: false });
@@ -63,15 +95,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   fetchUser: async () => {
     try {
       const { data } = await api.get<any>('/auth/me');
+      const remember = !!localStorage.getItem('verynth_token');
+      const storage = remember ? localStorage : sessionStorage;
+      storage.setItem('verynth_user', JSON.stringify(data));
       set({ user: data });
-    } catch {
-      // Ignored if unauthenticated
+    } catch (err: any) {
+      if (err.status === 401) {
+        clearSession();
+        set({ user: null, token: null, isAuthenticated: false });
+      }
     }
   },
 
   logout: () => {
-    localStorage.removeItem('verynth_token');
-    sessionStorage.removeItem('verynth_token');
+    clearSession();
     set({ user: null, token: null, isAuthenticated: false });
   },
 

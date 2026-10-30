@@ -21,14 +21,15 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 @router.post("/signup", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
 async def signup(body: SignupRequest, db: AsyncSession = Depends(get_db)):
-    """Register a new user account."""
-    existing = await get_user_by_email(db, body.email)
+    """Register a new user account with normalized email and immediate persistence."""
+    clean_email = body.email.strip().lower()
+    existing = await get_user_by_email(db, clean_email)
     if existing:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="Email already registered",
         )
-    user = await create_user(db, body.name, body.email, body.password)
+    user = await create_user(db, body.name.strip(), clean_email, body.password)
     token = create_access_token(user.id)
     return AuthResponse(
         token=token,
@@ -38,8 +39,9 @@ async def signup(body: SignupRequest, db: AsyncSession = Depends(get_db)):
 
 @router.post("/signin", response_model=AuthResponse)
 async def signin(body: SigninRequest, db: AsyncSession = Depends(get_db)):
-    """Sign in with email and password."""
-    user = await get_user_by_email(db, body.email)
+    """Sign in with email and password using secure password verification."""
+    clean_email = body.email.strip().lower()
+    user = await get_user_by_email(db, clean_email)
     if not user or not verify_password(body.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

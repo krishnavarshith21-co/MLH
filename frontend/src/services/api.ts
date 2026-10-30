@@ -28,14 +28,23 @@ class ApiClient {
       },
     });
 
-    if (response.status === 401) {
-      console.warn('API 401 Unauthorized for', endpoint);
-      throw new Error('Unauthorized');
-    }
-
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Request failed' }));
-      throw new Error(error.message || (typeof error.detail === 'string' ? error.detail : error.detail?.map((e: any) => e.msg).join('; ')) || `HTTP ${response.status}`);
+      const errorData = await response.json().catch(() => ({ message: response.statusText || 'Request failed' }));
+      let message = 'Request failed';
+      if (typeof errorData.detail === 'string') {
+        message = errorData.detail;
+      } else if (Array.isArray(errorData.detail)) {
+        message = errorData.detail.map((e: any) => e.msg || e.message).join('; ');
+      } else if (errorData.message) {
+        message = errorData.message;
+      } else {
+        message = response.status === 401 ? 'Invalid email or password' : `HTTP error ${response.status}`;
+      }
+
+      const err = new Error(message);
+      (err as any).status = response.status;
+      (err as any).detail = errorData.detail;
+      throw err;
     }
 
     const data = await response.json();

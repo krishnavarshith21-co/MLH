@@ -392,7 +392,7 @@ async def get_presentation_data(db: AsyncSession, demo_user_id: str) -> dict[str
                 Dependency.name == "pandas",
             )
         )
-        pandas_dep = dep_res.scalar_one_or_none()
+        pandas_dep = dep_res.scalars().first()
         if pandas_dep:
             primary_dep_id = pandas_dep.id
 

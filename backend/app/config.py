@@ -43,6 +43,26 @@ class Settings(BaseSettings):
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
     @property
+    def resolved_database_url(self) -> str:
+        """Resolve database URL to a stable absolute path independent of current working directory."""
+        url = self.DATABASE_URL
+        if "sqlite" in url:
+            prefix = "sqlite+aiosqlite:///"
+            for p in ["sqlite+aiosqlite:///", "sqlite:///"]:
+                if url.startswith(p):
+                    raw_path = url[len(p):]
+                    break
+            else:
+                return url
+
+            path_obj = Path(raw_path)
+            if not path_obj.is_absolute():
+                backend_dir = Path(__file__).resolve().parent.parent
+                path_obj = (backend_dir / path_obj).resolve()
+            return f"{prefix}{path_obj}"
+        return url
+
+    @property
     def sample_project_abs_path(self) -> Path:
         """Resolve sample project path relative to backend directory."""
         p = Path(self.SAMPLE_PROJECT_PATH)
