@@ -96,13 +96,15 @@ async def get_history(
     return items
 
 
+@app.get("/", tags=["system"])
 @app.get("/health", tags=["system"])
 @app.get("/api/health", tags=["system"])
 async def health_check():
-    """Health check endpoint."""
+    """Health check and root service discovery endpoint."""
     return {
         "status": "healthy",
         "service": "VERYNTH Backend",
         "version": "1.0.0",
+        "docs": "/docs",
     }
 
