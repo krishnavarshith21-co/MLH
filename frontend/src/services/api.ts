@@ -1,4 +1,8 @@
-const API_BASE = '/api';
+const VITE_API_BASE = import.meta.env.VITE_API_URL 
+  ? `${String(import.meta.env.VITE_API_URL).replace(/\/+$/, '')}/api`
+  : '/api';
+
+const API_BASE = VITE_API_BASE;
 
 class ApiClient {
   private baseUrl: string;
